@@ -32,7 +32,7 @@ bson = Bson.encode a: 1, b: "2", c: [1,2,3], d: [d1: 10, d2: 11]
 ```
 In this case, `bson` would be a document with 4 elements (an Integer, a String, an Array and an embeded document)
 
-Conversly, to decode that bson document:
+Conversly, to decode a bson document:
 ```elixir
 [a: 1] == Bson.decode <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
 ```
