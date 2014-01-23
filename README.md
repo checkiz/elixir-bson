@@ -3,11 +3,11 @@ elixir-bson
 
 BSON implementation for Elixir Language
 
-BSON is a binary format in which zero or more key/value pairs are stored as a single entity, caller a document. It is a data type with a standard binary representation defined at <http://www.bsonspec.org>.
+BSON is a binary format in which zero or more key/value pairs are stored as a single entity, called a document. It is a data type with a standard binary representation defined at <http://www.bsonspec.org>.
 
 This implements version 1.0 of that spec.
 
-It is used by [elixir-mongio](https://github.com/checkiz/elixir-mongo) a [MongoDB](http://www.mongodb.org) driver in Elixir.
+This project is used by [elixir-mongo](https://github.com/checkiz/elixir-mongo), a [MongoDB](http://www.mongodb.org) driver in Elixir.
 
 This implementation maps the Bson grammar with Elixir terms in the following way:
   - document: Keyword List
@@ -32,6 +32,11 @@ bson = Bson.encode a: 1, b: "2", c: [1,2,3], d: [d1: 10, d2: 11]
 ```
 In this case, `bson` would be a document with 4 elements (an Integer, a String, an Array and an embeded document)
 
+Conversly, to decode that bson document:
+```elixir
+[a: 1] == Bson.decode <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
+```
+
 Special Bson element that do not have match in Elixir are represented with Record, for example:
 
 ```elixir
@@ -39,4 +44,4 @@ jsbson = Bson.encode js: Bson.JS.new code:"function(a) return a+b;", scope: [b: 
 rebson = Bson.encode re: Bson.Regex.new pattern: "\d*", opts: "g"
 ```
 
-Implementation of encoders and decoders is done though `Protocol`, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the userdefined subtype)
+Implementation of encoders and decoders is done using `Protocol`, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the userdefined subtype)
