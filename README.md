@@ -37,7 +37,7 @@ Conversly, to decode a bson document:
 [a: 1] == Bson.decode <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
 ```
 
-Special Bson element that do not have match in Elixir are represented with Record, for example:
+Special Bson element that do not have obvious corresponding type in Elixir are represented with Record, for example:
 
 ```elixir
 jsbson = Bson.encode js: Bson.JS.new code:"function(a) return a+b;", scope: [b: 2]
