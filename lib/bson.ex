@@ -5,6 +5,7 @@ defmodule Bson do
     doc
   end
 
+  def tokenize({from, len}, bson), do: BsonTk.tokenize_e_list(bson, from+4, from+len-1)
   def tokenize(bson) do
     sizebson = size(bson)
     cond do
@@ -21,6 +22,7 @@ defmodule Bson do
     end
   end
 
+  def decode(part, bson), do: tokenize(part, bson) |> Enum.map &(decode_kv(&1, bson))
   def decode(bson), do: tokenize(bson) |> Enum.map &(decode_kv(&1, bson))
 
   def doc(s),     do: int32(size(s)+5) <> s <> "\x00"
