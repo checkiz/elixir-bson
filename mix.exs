@@ -4,9 +4,11 @@ defmodule Bson.Mixfile do
   def project do
     [ app: :bson,
       name: "bson",
-      version: "0.0.1",
+      version: "0.1.1",
       elixir: "~> 0.12.2",
-      deps: deps ]
+      source_url: "https://github.com/checkiz/elixir-bson",
+      deps: deps(Mix.env),
+      docs: &docs/0 ]
   end
 
   # Configuration for the OTP application
@@ -15,7 +17,14 @@ defmodule Bson.Mixfile do
   end
   
   # Returns the list of dependencies in the format:
-  defp deps do
-    []
+  defp deps(:docs) do
+    [{ :ex_doc, github: "elixir-lang/ex_doc" }]
+  end
+  defp deps(_), do: []
+
+  defp docs do
+    [ readme: true,
+      main: "README",
+      source_ref: System.cmd("git rev-parse --verify --quiet HEAD") ]
   end
 end

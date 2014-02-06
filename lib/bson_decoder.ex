@@ -1,3 +1,4 @@
+#  BSON Document
 defprotocol BsonDecoder do
   def decode(token, bson)
 end
@@ -28,14 +29,14 @@ end
 
 defimpl BsonDecoder, for: BsonTk.Doc do
   def decode(BsonTk.Doc[part: {from, len}], bson) do
-    BsonTk.tokenize_e_list(bson, from, from+len, [])
+    BsonTk.tokenize_e_list(bson, from, from+len)
       |> Enum.map &(Bson.decode_kv(&1, bson))
   end
 end
 
 defimpl BsonDecoder, for: BsonTk.Array do
   def decode(BsonTk.Array[part: {from, len}], bson) do
-    BsonTk.tokenize_e_list(bson, from, from+len, [])
+    BsonTk.tokenize_e_list(bson, from, from+len)
       |> Enum.map &(Bson.decode_v(&1, bson))
   end
 end
@@ -69,7 +70,7 @@ defimpl BsonDecoder, for: BsonTk.JS do
 
     Bson.JS[code: :erlang.binary_part(bson, js.code), scope:
       case js.scope do
-        nil -> []
+        nil -> nil
         part -> BsonDecoder.BsonTk.Doc.decode(BsonTk.Doc[part: part], bson)
       end]
   end

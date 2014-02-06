@@ -3,7 +3,7 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule Bson.Test do
   use ExUnit.Case
 
-  test "Elementary type" do
+  test "Encoding elementary type" do
     assert Bson.encode([2]) == <<12, 0, 0, 0, 16, 48, 0, 2, 0, 0, 0, 0>>
     assert Bson.encode([-0x80000001]) == <<16, 0, 0, 0, 18, 48, 0, 255, 255, 255, 127, 255, 255, 255, 255, 0>>
     assert Bson.encode([1.1]) == <<16, 0, 0, 0, 1, 48, 0, 154, 153, 153, 153, 153, 153, 241, 63, 0>>
@@ -12,6 +12,9 @@ defmodule Bson.Test do
     assert Bson.encode([Bson.Regex[pattern: "p", opts: "o"]]) == <<12, 0, 0, 0, 11, 48, 0, 112, 0, 111, 0, 0>>
     assert Bson.encode([{1390, 324703, 518471}]) == <<16, 0, 0, 0, 9, 48, 0, 30, 97, 207, 181, 67, 1, 0, 0, 0>>
     assert Bson.encode([MIN_KEY]) == <<8, 0, 0, 0, 255, 48, 0, 0>>
+    assert Bson.encode([:nan])    == <<16, 0, 0, 0, 1, 48, 0, 0, 0, 0, 0, 0, 0, 248, 127, 0>>
+    assert Bson.encode([:'+inf']) == <<16, 0, 0, 0, 1, 48, 0, 0, 0, 0, 0, 0, 0, 240, 127, 0>>
+    assert Bson.encode([:'-inf']) == <<16, 0, 0, 0, 1, 48, 0, 0, 0, 0, 0, 0, 0, 240, 255, 0>>
   end
 
   test "site sample" do
@@ -176,5 +179,14 @@ defmodule Bson.Test do
 
     assert Bson.encode(term) == bson
     assert term == Bson.decode(bson)
+  end
+
+  test "invalid keyword" do
+    assert_raise BsonEncoder.List.Error,  fn -> Bson.encode([{:a, 0}, 1]) end
+    assert_raise BsonEncoder.List.Error,  fn -> Bson.encode([{:a, 0}, {"b", 2}]) end
+  end
+
+  test "invalid tuple" do
+    assert_raise BsonEncoder.Tuple.Error,  fn ->  Bson.encode([{:b, 2, 3}]) end
   end
 end

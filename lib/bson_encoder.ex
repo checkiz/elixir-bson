@@ -1,33 +1,38 @@
-defrecord Bson.ObjectId, oid: nil, nop: nil
-defrecord Bson.Regex, pattern: "", opts: ""
-defrecord Bson.JS, code: "", scope: []
-defrecord Bson.Timestamp, inc: nil, ts: nil
-defrecord Bson.Bin, bin: "", subtype: "\x00" do
-  def subtyx(Binary),     do: "\x00"
-  def subtyx(Function),   do: "\x01"
-  def subtyx(Binary.Old), do: "\x02"
-  def subtyx(UUID.Old),   do: "\x03"
-  def subtyx(UUID),       do: "\x04"
-  def subtyx(MD5),        do: "\x05"
-  def subtyx(User),       do: <<0x80>>
-  def xsubty("\x00"),     do: Binary
-  def xsubty("\x01"),     do: Function
-  def xsubty("\x02"),     do: Binary
-  def xsubty("\x03"),     do: UUID
-  def xsubty("\x04"),     do: UUID
-  def xsubty("\x05"),     do: MD5
-  def xsubty(<<0x80>>),   do: User
-end
-
 defprotocol BsonEncoder do
+  @moduledoc """
+  `Bson` provides encoding and decoding function for Bson format
+  see http://bsonspec.org/
+  """
+
+  @doc """
+  Returns a binary representing a term in Bson format
+
+  This version implements it for the following types:
+
+  * 
+  * `Integer` - Encodes integer in 32 or 64 bits
+  * `Float` - Encodes float in 32 or 64 bits
+  * `Atom` - Encodes special atom (`false`, `true`, `nil`, 
+  `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format 
+  others in special type Symbol
+  * `Tuple` - like the empty document `{}` and the return of `now/1`
+  * `BitString` - as binary string
+  * `List` - Keyword List as document others as array
+  * `Bson.Regex' - see specs
+  * `Bson.ObjectId' - see specs
+  * `Bson.JS' - see specs
+  * `Bson.Bin' - see specs
+  * `Bson.Timestamp  ' - see specs
+  """
   def encode(term, name)
 end
 
 defimpl BsonEncoder, for: Integer do
+
   def encode(i, name), do: pre(i) <> name <> "\x00" <> int(i)
 
-  def int(i) when -0x80000000 <= i and i <= 0x80000000, do: Bson.int32(i)
-  def int(i) when -0x8000000000000000 <= i and i <= 0x8000000000000000, do: Bson.int64(i)
+  defp int(i) when -0x80000000 <= i and i <= 0x80000000, do: Bson.int32(i)
+  defp int(i) when -0x8000000000000000 <= i and i <= 0x8000000000000000, do: Bson.int64(i)
 
   defp pre(i) when -0x80000000 <= i and i <= 0x80000000, do: "\x10"
   defp pre(i) when -0x8000000000000000 <= i and i <= 0x8000000000000000, do: "\x12"
@@ -36,7 +41,7 @@ end
 defimpl BsonEncoder, for: Float do
   def encode(f, name), do: "\x01" <> name <> "\x00" <> float(f)
 
-  def float(f),   do: <<(f)::[size(64),float,little]>>
+  defp float(f),   do: <<(f)::[size(64),float,little]>>
 end
 
 defimpl BsonEncoder, for: Atom do
@@ -44,22 +49,33 @@ defimpl BsonEncoder, for: Atom do
   def encode(false, name),   do: "\x08" <> name <> "\x00" <> "\x00"
   def encode(true, name),    do: "\x08" <> name <> "\x00" <> "\x01"
   def encode(nil, name),     do: "\x0a" <> name <> "\x00"
+  def encode(:nan, name),    do: "\x01" <> name <> "\x00" <> <<0, 0, 0, 0, 0, 0, 248, 127>>
+  def encode(:'+inf', name), do: "\x01" <> name <> "\x00" <> <<0, 0, 0, 0, 0, 0, 240, 127>>
+  def encode(:'-inf', name), do: "\x01" <> name <> "\x00" <> <<0, 0, 0, 0, 0, 0, 240, 255>>
   def encode(MIN_KEY, name), do: <<0xff>> <> name <> "\x00"
   def encode(MAX_KEY, name), do: "\x7f" <> name <> "\x00"
   def encode(atom, name),    do: "\x0e" <> name <> "\x00" <> Bson.string(atom_to_binary(atom))
 end
 
 defimpl BsonEncoder, for: Bson.Regex do
-  def encode(Bson.Regex[pattern: p, opts: o], name),      do:  "\x0b" <> name <> "\x00" <> p <> "\x00" <> o <> "\x00"
+  def encode(Bson.Regex[pattern: p, opts: o], name) when is_binary(p) and is_binary(o) do
+    "\x0b" <> name <> "\x00" <> p <> "\x00" <> o <> "\x00"
+  end
 end
 
 defimpl BsonEncoder, for: Bson.ObjectId do
-  def encode(Bson.ObjectId[oid: oid], name),              do:  "\x07" <> name <> "\x00" <> oid
+  def encode(Bson.ObjectId[oid: oid], name) when is_binary(oid) do
+    "\x07" <> name <> "\x00" <> oid
+  end
 end
 
 defimpl BsonEncoder, for: Bson.JS do
-  def encode(Bson.JS[code: js, scope: []], name),        do:  "\x0d" <> name <> "\x00" <> Bson.string(js)
-  def encode(Bson.JS[code: js, scope: ctx], name),        do:  "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.List.encode_e_list(ctx))
+  def encode(Bson.JS[code: js, scope: nil], name) when is_binary(js) do
+    "\x0d" <> name <> "\x00" <> Bson.string(js)
+  end
+  def encode(Bson.JS[code: js, scope: ctx], name) when is_binary(js) and is_list(ctx) do
+    "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.List.encode_e_list(ctx))
+  end
 
   defp js_ctx(jsctx), do: Bson.int32(size(jsctx)+4) <> jsctx
 end
@@ -73,8 +89,21 @@ defimpl BsonEncoder, for: Bson.Timestamp do
 end
 
 defimpl BsonEncoder, for: Tuple do
+  defexception Error, reason: nil do
+    @moduledoc """
+    Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0
+    """
+    def message(Error[reason: reason]) do
+      reason
+    end
+  end
   def encode({}, name),         do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
-  def encode({a, s, o}, name),  do:  "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
+  def encode({a, s, o}, name) when is_integer(a) and is_integer(s) and is_integer(o) do
+    "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
+  end
+  def encode(t, name) do
+    raise Error, reason: "cannot encode tuple of size " <> to_string(size(t)) <> " (" <> name <> ")"
+  end
 end
 
 defimpl BsonEncoder, for: BitString do
@@ -82,8 +111,16 @@ defimpl BsonEncoder, for: BitString do
 end
 
 defimpl BsonEncoder, for: List do
+  defexception Error, reason: nil do
+    @moduledoc """
+    Only Keyword list or list of terms that can be encoded. If a list starts with key-value tuple it is assumed to be a Keyword List.
+    """
+    def message(Error[reason: reason]) do
+      reason
+    end
+  end
   # def encode([], name),                  do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
-  def encode([{k,_}|_] = kw, name) when is_atom(k) do
+  def encode([{k,_}|_] = kw, name) when is_atom(k) and k != Bson.ObjectId do
     "\x03" <> name <> "\x00" <> encode_e_list(kw)
   end
   def encode(array, name) when is_list(array) do
@@ -92,8 +129,17 @@ defimpl BsonEncoder, for: List do
 
   def encode_e_list(keyword) do
     keyword
-      |> Enum.reduce([], fn({k,v}, acc) -> [BsonEncoder.encode(v, k |> atom_to_binary) | acc] end)
-      |> docbits
+      |> Enum.reduce([], &(reduce_kv_pair/2))
+      |> bitlist_to_bsondoc
+  end
+  defp reduce_kv_pair({k, v}, acc) when is_atom(k), do: [BsonEncoder.encode(v, k |> atom_to_binary)|acc]
+  defp reduce_kv_pair(item, _) do
+    case item do
+      {k, _} ->
+        raise Error, reason: to_string(k) <> "key is not an atom (in a list that looks like a Keyword)"
+      _ ->
+        raise Error, reason: "cannot encode an item that is not a key-value pair (in a list that looks like a Keyword)"
+    end
   end
 
   defp encode_array(arr) do
@@ -101,9 +147,9 @@ defimpl BsonEncoder, for: List do
       |> Enum.reduce({0, []}, fn(item, {n, acc}) ->
           {n+1, [BsonEncoder.encode(item, n |> integer_to_binary) | acc]}
         end)
-    arrbin |> docbits
+    arrbin |> bitlist_to_bsondoc
   end
 
-  defp docbits(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
+  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
 
 end

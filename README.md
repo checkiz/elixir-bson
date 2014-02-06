@@ -23,7 +23,7 @@ This implementation maps the Bson grammar with Elixir terms in the following way
   - Regular expression: Bson.Regex (record)
   - JavaScript: Bson.JS (record)
   - Timestamp: Bson.Timestamp (record)
-  - Min and Max key: MIN_KEY or MAX_KEY (Atom)
+  - Min and Max key: `MIN_KEY` or `MAX_KEY` (Atom)
 
 This is how to encode a sample Elixir Keyword into a Bson Documentation:
 

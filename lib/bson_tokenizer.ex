@@ -1,20 +1,32 @@
-defrecord BsonTk.Int32,     part: nil
-defrecord BsonTk.Int64,     part: nil
-defrecord BsonTk.Float,     part: nil
-defrecord BsonTk.Doc,       part: nil
-defrecord BsonTk.Array,     part: nil
-defrecord BsonTk.String,    part: nil
-defrecord BsonTk.Atom,      part: nil
-defrecord BsonTk.Bool,      part: nil
-defrecord BsonTk.ObjectId,  part: nil
-defrecord BsonTk.Bin,       part: nil, subtype: nil
-defrecord BsonTk.Regex,     pattern: nil, opts: nil
-defrecord BsonTk.JS,        code: nil, scope: nil
-defrecord BsonTk.Now,       part: nil
-defrecord BsonTk.Timestamp, inc: nil, ts: nil
-
 defmodule BsonTk do
+  @moduledoc """
+  `BsonTk` tokenize a bson document see tokenize/1 in module `Bson`
+  """
 
+  defrecord Int32,     part: nil
+  defrecord Int64,     part: nil
+  defrecord Float,     part: nil
+  defrecord Doc,       part: nil
+  defrecord Array,     part: nil
+  defrecord String,    part: nil
+  defrecord Atom,      part: nil
+  defrecord Bool,      part: nil
+  defrecord ObjectId,  part: nil
+  defrecord Bin,       part: nil, subtype: nil
+  defrecord Regex,     pattern: nil, opts: nil
+  defrecord JS,        code: nil, scope: nil
+  defrecord Now,       part: nil
+  defrecord Timestamp, inc: nil, ts: nil
+
+  @doc """
+  tokenize one element, this is a key-value pair, of a bson document starting at position `from`.
+
+  It returns {{`tk_name`, `tk_element`}, `tk_end} where:
+
+  * `tk_name` - is the token of the element name (binary part {from, to})
+  * `tk_element` - is the token of the element value
+  * `tk_end` - is the end position of the element
+  """
   def tokenize(bson, from, to) do
     name_end = Bson.peek_cstring_end(bson, from+1, to)
     tk_name = {from+1, name_end-(from+1)}
@@ -23,12 +35,24 @@ defmodule BsonTk do
     {{tk_name, tk_element}, tk_end}
   end
 
+  @doc """
+  tokenize one element value of bson starting at position 'from'. Tag identifies the element type to decode.
+
+  It returns {`tk_element`, `tk_end`} where:
+
+  * `tk_element` - is the token of the element value. It can be an atom `nil`, `MIN_KEY`, `MAX_KEY`
+  or a record
+  (`BsonTk.Int32`, `BsonTk.Int64`, `BsonTk.Float`, `BsonTk.Doc`, `BsonTk.Array`, `BsonTk.String`, `BsonTk.Atom`,
+  `BsonTk.Bool`, `BsonTk.ObjectId`, `BsonTk.Bin`, `BsonTk.Regex`, `BsonTk.JS`, `BsonTk.Now`, `BsonTk.Timestamp`)
+  * `tk_end` - is the end position of the element
+  """
   def tokenize_element("\x10", _, from), do: {{BsonTk.Int32, {from, 4}}, from+4}
   def tokenize_element("\x12", _, from), do: {{BsonTk.Int64, {from, 8}}, from+8}
   def tokenize_element("\x01", _, from), do: {{BsonTk.Float, {from, 8}}, from+8}
   def tokenize_element("\x07", _, from), do: {BsonTk.ObjectId[part: {from, 12}], from+12}
   def tokenize_element("\x08", _, from), do: {{BsonTk.Bool , {from, 1}}, from+1}
   def tokenize_element("\x09", _, from), do: {{BsonTk.Now  , {from, 8}}, from+8}
+  def tokenize_element("\x06", _, from), do: {nil, from+0}
   def tokenize_element("\x0a", _, from), do: {nil, from+0}
   def tokenize_element("\x11", _, from), do: {BsonTk.Timestamp[inc: {from, 4}, ts: {from+4, 4}], from+8}
   def tokenize_element(<<0xff>>, _, from), do: {MIN_KEY, from+0}
@@ -85,10 +109,15 @@ defmodule BsonTk do
     len = Bson.int32(bson, from)
     {BsonTk.Bin[part: {from+5, len}, subtype: binary_part(bson, from+4, 1)], from+len+5}
   end
+  # binary
+  def tokenize_element(tag, _, _), do: raise "unsupported tag (" <> tag <> ")"
 
+  @doc """
+  Tokenize elements of a bson document (e_list in the spec)
+  """
   def tokenize_e_list(bson, from, to), do: tokenize_e_list(bson, from, to, [])
-  def tokenize_e_list(_bson, from, from, acc), do: acc |> Enum.reverse
-  def tokenize_e_list(bson, from, to, acc) do
+  defp tokenize_e_list(_bson, from, from, acc), do: acc |> Enum.reverse
+  defp tokenize_e_list(bson, from, to, acc) do
     {tk, tk_end} = tokenize(bson, from, to)
     tokenize_e_list(bson, tk_end, to, [tk | acc])
   end
