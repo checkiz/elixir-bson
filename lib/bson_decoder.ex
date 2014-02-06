@@ -1,5 +1,16 @@
-#  BSON Document
 defprotocol BsonDecoder do
+  @moduledoc """
+  Similarly to `BsonEncoder`, this protocol defines decoding of chunks of Bson document.
+  Chunks are identified by tokens and isolate an element of a Bson document.
+
+  There is one implementation of the protocol for every record defined in `BsonTk`
+
+  """
+
+  @doc """
+  Returns a elixir term decoded from a chunk of a Bson document.
+
+  """
   def decode(token, bson)
 end
 

@@ -10,6 +10,7 @@ This implements version 1.0 of that spec.
 This project is used by [elixir-mongo](https://github.com/checkiz/elixir-mongo), a [MongoDB](http://www.mongodb.org) driver in Elixir.
 
 This implementation maps the Bson grammar with Elixir terms in the following way:
+
   - document: Keyword List
   - int32 and int64: Integer
   - double: Float
@@ -30,7 +31,10 @@ This is how to encode a sample Elixir Keyword into a Bson Documentation:
 ```elixir
 bson = Bson.encode a: 1, b: "2", c: [1,2,3], d: [d1: 10, d2: 11]
 ```
-In this case, `bson` would be a document with 4 elements (an Integer, a String, an Array and an embeded document)
+In this case, `bson` would be a document with 4 elements (an Integer, a String, an Array and an embeded document). This document would correspond in Javascript to:
+```javascript
+{a: 1, b: "2", c: [1,2,3], d: {d1: 10, d2: 11}}
+```
 
 Conversly, to decode a bson document:
 ```elixir
@@ -44,4 +48,4 @@ jsbson = Bson.encode js: Bson.JS.new code:"function(a) return a+b;", scope: [b: 
 rebson = Bson.encode re: Bson.Regex.new pattern: "\d*", opts: "g"
 ```
 
-Implementation of encoders and decoders is done using `Protocol`, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the userdefined subtype)
+Implementation of encoders and decoders is done using `Protocol`, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the user defined subtype)

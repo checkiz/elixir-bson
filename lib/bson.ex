@@ -2,6 +2,52 @@ defmodule Bson do
   @moduledoc """
   `Bson` provides encoding and decoding function for Bson format
   see http://bsonspec.org/
+
+  Usage:
+
+  ```elixir
+  bigterm = [
+      a:  -4.230845,
+      b:  "hello",
+      k1: false,
+      k2: true,
+      p:  :anyatom,
+      q1: -2000444000,
+      q2: -8000111000222001,
+      c:  [x: -1, y: 2.2001],
+      d:  [23, 45, 200],
+      m:  nil,
+      l:  {1390, 470561, 277000},
+      s1: MIN_KEY,
+      s2: MAX_KEY
+      e:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
+                    bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
+      f:  Bson.Bin[ subtype: Bson.Bin.subtyx(Function),
+                    bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
+      g:  Bson.Bin[ subtype: Bson.Bin.subtyx(UUID),
+                    bin:  <<49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0,
+                            2, 48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109,
+                            101, 0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64,
+                            16, 50, 0, 194, 7, 0, 0, 0, 0>>],
+      h:  Bson.Bin[ subtype: Bson.Bin.subtyx(MD5),
+                    bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
+      i:  Bson.Bin[ subtype: Bson.Bin.subtyx(User),
+                    bin:  <<49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0, 2,
+                            48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109, 101,
+                            0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64, 16, 50,
+                            0, 194, 7, 0, 0, 0, 0>>],
+      j:  Bson.ObjectId[oid: <<82, 224, 229, 161, 0, 0, 2, 0, 3, 0, 0, 4>>],
+      n:  Bson.Regex[pattern: "p", opts: "o"],
+      o1: Bson.JS[code: "function(x) = x + 1;"],
+      o2: Bson.JS[scope: [x: 0, y: "foo"], code: "function(a) = a + x"],
+      r:  Bson.Timestamp[inc: 1, ts: 2],
+    ]
+  bigbson = Bson.encode(bigterm)
+  bigterm = Bson.decode(bigbson)
+  ```
+
+  see `encode/1` and `decode/1`
+
   """
   defrecord ObjectId,
     oid: nil do
@@ -76,7 +122,18 @@ defmodule Bson do
   end
 
   @doc """
-  Returns a binary representing a term in Bson format
+  Returns a binary representing a Bson document.
+
+  It accepts a Keyword list or the empty document `{}` and returns a binary
+
+  ```elixir
+  Bson.encode({}) == <<5, 0, 0, 0, 0>>
+  Bson.encode(a: 1) == <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
+  Bson.encode(a: 2, b: 2) == <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
+  ```
+
+  It delegates this job to protocol `BsonEncoder`
+
   """
   def encode(term) do
     <<_::16, doc::binary>> = BsonEncoder.encode(term, "")
@@ -85,6 +142,8 @@ defmodule Bson do
 
   @doc """
   Returns a decoded term from a Bson binary
+
+  see protocol `BsonDecoder`
   """
   def decode(bson), do: tokenize(bson) |> Enum.map &(decode_kv(&1, bson))
   @doc """

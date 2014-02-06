@@ -1,31 +1,91 @@
 defmodule BsonTk do
   @moduledoc """
   `BsonTk` tokenize a bson document see tokenize/1 in module `Bson`
+
+  Before being decoded bson documents are tokenized, this means cut into chunks that are easy to decode.
+
   """
 
-  defrecord Int32,     part: nil
-  defrecord Int64,     part: nil
-  defrecord Float,     part: nil
-  defrecord Doc,       part: nil
-  defrecord Array,     part: nil
-  defrecord String,    part: nil
-  defrecord Atom,      part: nil
-  defrecord Bool,      part: nil
-  defrecord ObjectId,  part: nil
-  defrecord Bin,       part: nil, subtype: nil
-  defrecord Regex,     pattern: nil, opts: nil
-  defrecord JS,        code: nil, scope: nil
-  defrecord Now,       part: nil
-  defrecord Timestamp, inc: nil, ts: nil
+  defrecord Int32,     part: nil do
+    @moduledoc """
+    Token for 32-bit Integer
+    """
+  end
+  defrecord Int64,     part: nil do
+    @moduledoc """
+    Token for 64-bit integer
+    """
+  end
+  defrecord Float,     part: nil do
+    @moduledoc """
+    Token for Floating point
+    """
+  end
+  defrecord Doc,       part: nil do
+    @moduledoc """
+    Token for Embedded BSON Document
+    """
+  end
+  defrecord Array,     part: nil do
+    @moduledoc """
+    Token for Array
+    """
+  end
+  defrecord String,    part: nil do
+    @moduledoc """
+    Token for UTF-8 string
+    """
+  end
+  defrecord Atom,      part: nil do
+    @moduledoc """
+    Token for Symbol
+    """
+  end
+  defrecord Bool,      part: nil do
+    @moduledoc """
+    Token for Boolean
+    """
+  end
+  defrecord ObjectId,  part: nil do
+    @moduledoc """
+    Token for MongoDb ObjectId
+    """
+  end
+  defrecord Bin,       part: nil, subtype: nil do
+    @moduledoc """
+    Token for Binary data
+    """
+  end
+  defrecord Regex,     pattern: nil, opts: nil do
+    @moduledoc """
+    Token for Regular expression
+    """
+  end
+  defrecord JS,        code: nil, scope: nil do
+    @moduledoc """
+    Token for JavaScript code with or without scope
+    """
+  end
+  defrecord Now,       part: nil do
+    @moduledoc """
+    Token for UTC datetime
+    """
+  end
+  defrecord Timestamp, inc: nil, ts: nil do
+    @moduledoc """
+    Token for Timestamp
+    """
+  end
 
   @doc """
   tokenize one element, this is a key-value pair, of a bson document starting at position `from`.
 
-  It returns {{`tk_name`, `tk_element`}, `tk_end} where:
+  It returns {{`tk_name`, `tk_element`}, `tk_end`} where:
 
   * `tk_name` - is the token of the element name (binary part {from, to})
-  * `tk_element` - is the token of the element value
+  * `tk_element` - is the token of the element value (see `tokenize_element/3`)
   * `tk_end` - is the end position of the element
+
   """
   def tokenize(bson, from, to) do
     name_end = Bson.peek_cstring_end(bson, from+1, to)
@@ -36,7 +96,9 @@ defmodule BsonTk do
   end
 
   @doc """
-  tokenize one element value of bson starting at position 'from'. Tag identifies the element type to decode.
+  tokenize one element value of bson starting at position `from`.
+  Based on the tag in front of an element of a Bson document (see e_list in specs),
+  it identifies the element type and created the appropriate BsonTk record.
 
   It returns {`tk_element`, `tk_end`} where:
 

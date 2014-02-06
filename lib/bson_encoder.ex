@@ -1,28 +1,28 @@
 defprotocol BsonEncoder do
   @moduledoc """
-  `Bson` provides encoding and decoding function for Bson format
-  see http://bsonspec.org/
-  """
+  `BsonEncoder` protocol defines Bson encoding according to Elixir types or Bson specific record (see `Bson`).
 
-  @doc """
-  Returns a binary representing a term in Bson format
+  List of the protocol implementations:
 
-  This version implements it for the following types:
-
-  * 
   * `Integer` - Encodes integer in 32 or 64 bits
-  * `Float` - Encodes float in 32 or 64 bits
+  * `Float` - Encodes float in 64 bits
   * `Atom` - Encodes special atom (`false`, `true`, `nil`, 
   `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format 
   others in special type Symbol
-  * `Tuple` - like the empty document `{}` and the return of `now/1`
+  * `Tuple` - Encodes the empty document `{}` and the return of `now/1`
   * `BitString` - as binary string
-  * `List` - Keyword List as document others as array
+  * `List` - Encodes a `Keyword` list as a document and any other list as array
   * `Bson.Regex' - see specs
   * `Bson.ObjectId' - see specs
   * `Bson.JS' - see specs
   * `Bson.Bin' - see specs
   * `Bson.Timestamp  ' - see specs
+
+  """
+
+  @doc """
+  Returns a binary representing a named term in Bson format
+
   """
   def encode(term, name)
 end
