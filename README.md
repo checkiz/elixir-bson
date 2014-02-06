@@ -3,6 +3,10 @@ elixir-bson
 
 BSON implementation for Elixir Language
 
+elixir-bson on GitHub [source repo](https://github.com/checkiz/elixir-bson) - 
+[documentation](https://checkiz.github.io/elixir-bson)
+
+
 BSON is a binary format in which zero or more key/value pairs are stored as a single entity, called a document. It is a data type with a standard binary representation defined at <http://www.bsonspec.org>.
 
 This implements version 1.0 of that spec.
