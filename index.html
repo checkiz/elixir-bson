@@ -1,88 +1,12 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Elixir-bson by checkiz</title>
+<!DOCTYPE html>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Elixir-bson</h1>
-        <p class="header">BSON documents in Elixir language</p>
-
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/checkiz/elixir-bson/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/checkiz/elixir-bson/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/checkiz/elixir-bson">View On GitHub</a></li>
-        </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/checkiz">checkiz</a></p>
-
-
-      </header>
-      <section>
-        <h1>
-<a name="elixir-bson" class="anchor" href="#elixir-bson"><span class="octicon octicon-link"></span></a>elixir-bson</h1>
-
-<p>BSON implementation for Elixir Language</p>
-
-<p>BSON is a binary format in which zero or more key/value pairs are stored as a single entity, called a document. It is a data type with a standard binary representation defined at <a href="http://www.bsonspec.org">http://www.bsonspec.org</a>.</p>
-
-<p>This implements version 1.0 of that spec.</p>
-
-<p>This project is used by <a href="https://github.com/checkiz/elixir-mongo">elixir-mongo</a>, a <a href="http://www.mongodb.org">MongoDB</a> driver in Elixir.</p>
-
-<p>This implementation maps the Bson grammar with Elixir terms in the following way:</p>
-
-<ul>
-<li>document: Keyword List</li>
-<li>int32 and int64: Integer</li>
-<li>double: Float</li>
-<li>string: String</li>
-<li>Array: List (non-keyword)</li>
-<li>binary: Bson.Bin (record)</li>
-<li>ObjectId: Bson.ObjectId (record)</li>
-<li>Boolean: true or false (Atom)</li>
-<li>UTC datetime: triple Atom</li>
-<li>Null value: nil (Atom)</li>
-<li>Regular expression: Bson.Regex (record)</li>
-<li>JavaScript: Bson.JS (record)</li>
-<li>Timestamp: Bson.Timestamp (record)</li>
-<li>Min and Max key: MIN_KEY or MAX_KEY (Atom)</li>
-</ul><p>This is how to encode a sample Elixir Keyword into a Bson Documentation:</p>
-
-<div class="highlight highlight-elixir"><pre><span class="n">bson</span> <span class="o">=</span> <span class="no">Bson</span><span class="o">.</span><span class="n">encode</span> <span class="ss">a:</span> <span class="m">1</span><span class="p">,</span> <span class="ss">b:</span> <span class="s2">"2"</span><span class="p">,</span> <span class="ss">c:</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">],</span> <span class="ss">d:</span> <span class="p">[</span><span class="ss">d1:</span> <span class="m">10</span><span class="p">,</span> <span class="ss">d2:</span> <span class="m">11</span><span class="p">]</span>
-</pre></div>
-
-<p>In this case, <code>bson</code> would be a document with 4 elements (an Integer, a String, an Array and an embeded document)</p>
-
-<p>Conversly, to decode a bson document:</p>
-
-<div class="highlight highlight-elixir"><pre><span class="p">[</span><span class="ss">a:</span> <span class="m">1</span><span class="p">]</span> <span class="o">==</span> <span class="no">Bson</span><span class="o">.</span><span class="n">decode</span> <span class="o">&lt;&lt;</span><span class="m">12</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">16</span><span class="p">,</span> <span class="m">97</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="o">&gt;&gt;</span>
-</pre></div>
-
-<p>Special Bson element that do not have obvious corresponding type in Elixir are represented with Record, for example:</p>
-
-<div class="highlight highlight-elixir"><pre><span class="n">jsbson</span> <span class="o">=</span> <span class="no">Bson</span><span class="o">.</span><span class="n">encode</span> <span class="ss">js:</span> <span class="no">Bson</span><span class="o">.</span><span class="no">JS</span><span class="o">.</span><span class="n">new</span> <span class="ss">code:</span><span class="s2">"function(a) return a+b;"</span><span class="p">,</span> <span class="ss">scope:</span> <span class="p">[</span><span class="ss">b:</span> <span class="m">2</span><span class="p">]</span>
-<span class="n">rebson</span> <span class="o">=</span> <span class="no">Bson</span><span class="o">.</span><span class="n">encode</span> <span class="ss">re:</span> <span class="no">Bson</span><span class="o">.</span><span class="no">Regex</span><span class="o">.</span><span class="n">new</span> <span class="ss">pattern:</span> <span class="s2">"\d*"</span><span class="p">,</span> <span class="ss">opts:</span> <span class="s2">"g"</span>
-</pre></div>
-
-<p>Implementation of encoders and decoders is done using <code>Protocol</code>, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the userdefined subtype)</p>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
-  </body>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>bson v0.1.1 Documentation</title>
+</head>
+<frameset cols="20%,*">
+  <frame name="list" src="modules_list.html" />
+  <frame name="main" src="README.html" />
+</frameset>
 </html>

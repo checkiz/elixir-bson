@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BsonTk</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <h1>
+        BsonTk
+        
+      </h1>
+
+      
+        <div id="moduledoc" class="docstring">
+          <p><a href="BsonTk.html"><code>BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code>Bson</code></a></p>
+
+        </div>
+      
+
+      
+        <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
+/lib/bson_tokenizer.ex#L1" target="_blank" class="view_source">Source</a>
+      
+
+      
+
+      
+        <h2 id="functions_summary">Functions summary</h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#tokenize/3">tokenize(bson, from, to)</a></td>
+  
+    <td class="summary_synopsis"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code>from</code>.</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#tokenize_e_list/3">tokenize_e_list(bson, from, to)</a></td>
+  
+    <td class="summary_synopsis"><p>Tokenize elements of a bson document (e_list in the spec)</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#tokenize_element/3">tokenize_element(tag, bson, from)</a></td>
+  
+    <td class="summary_synopsis"><p>tokenize one element value of bson starting at position &#39;from&#39;. Tag identifies the element type to decode.</p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
+
+      
+
+      
+
+      
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <p class="signature" id="tokenize/3">
+    <strong>tokenize(bson, from, to)</strong>
+  </p>
+  
+  <div class="docstring"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code>from</code>.</p>
+
+<p>It returns {{<code>tk_name</code>, <code>tk_element</code>}, `tk_end} where:</p>
+
+<ul>
+<li><code>tk_name</code> - is the token of the element name (binary part {from, to})</li>
+<li><code>tk_element</code> - is the token of the element value</li>
+<li><code>tk_end</code> - is the end position of the element</li>
+</ul>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
+/lib/bson_tokenizer.ex#L30" target="_blank" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <p class="signature" id="tokenize_e_list/3">
+    <strong>tokenize_e_list(bson, from, to)</strong>
+  </p>
+  
+  <div class="docstring"><p>Tokenize elements of a bson document (e_list in the spec)</p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
+/lib/bson_tokenizer.ex#L118" target="_blank" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <p class="signature" id="tokenize_element/3">
+    <strong>tokenize_element(tag, bson, from)</strong>
+  </p>
+  
+  <div class="docstring"><p>tokenize one element value of bson starting at position &#39;from&#39;. Tag identifies the element type to decode.</p>
+
+<p>It returns {<code>tk_element</code>, <code>tk_end</code>} where:</p>
+
+<ul>
+<li><code>tk_element</code> - is the token of the element value. It can be an atom <code>nil</code>, <code>MIN_KEY</code>, <code>MAX_KEY</code>
+or a record
+(<code>BsonTk.Int32</code>, <code>BsonTk.Int64</code>, <code>BsonTk.Float</code>, <code>BsonTk.Doc</code>, <code>BsonTk.Array</code>, <code>BsonTk.String</code>, <code>BsonTk.Atom</code>,
+<code>BsonTk.Bool</code>, <code>BsonTk.ObjectId</code>, <code>BsonTk.Bin</code>, <code>BsonTk.Regex</code>, <code>BsonTk.JS</code>, <code>BsonTk.Now</code>, <code>BsonTk.Timestamp</code>)</li>
+<li><code>tk_end</code> - is the end position of the element</li>
+</ul>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
+/lib/bson_tokenizer.ex#L49" target="_blank" class="view_source">Source</a>
+  
+</div>
+
+        </div>
+      
+
+      
+
+      
+    </div>
+  </body>
+</html>
