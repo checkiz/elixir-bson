@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bson.Regex</title>
+    <title>BsonTk.Atom</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
 
@@ -21,7 +21,7 @@
 
     <div id="content">
       <h1>
-        Bson.Regex
+        BsonTk.Atom
         
           <small>record</small>
         
@@ -29,19 +29,14 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p>Represents a Regex </p>
-
-<ul>
-<li><code>:pattern</code> - a bynary that is the regex pattern</li>
-<li><code>:opts</code> - a bianry that contains the regex options string identified by characters, which must be stored in alphabetical order. Valid options are &#39;i&#39; for case insensitive matching, &#39;m&#39; for multiline matching, &#39;x&#39; for verbose mode, &#39;l&#39; to make w, W, etc. locale dependent, &#39;s&#39; for dotall mode (&#39;.&#39; matches everything), and &#39;u&#39; to make w, W, etc. match unicode</li>
-</ul>
+          <p>Token for Symbol</p>
 
         </div>
       
 
       
         <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
-/lib/bson.ex#L60" target="_blank" class="view_source">Source</a>
+/lib/bson_tokenizer.ex#L39" target="_blank" class="view_source">Source</a>
       
 
       
@@ -50,13 +45,7 @@
           
             <li>
               <span class="summary_signature">
-                <strong>pattern:</strong> ""
-              </span>
-            </li>
-          
-            <li>
-              <span class="summary_signature">
-                <strong>opts:</strong> ""
+                <strong>part:</strong> nil
               </span>
             </li>
           
@@ -74,13 +63,13 @@
           <h2>Types</h2>
           <div class="type_detail">
   <p class="typespec" id="t:t/0">
-    <a href="#t:t/0">t</a> :: {Bson.Regex, term, term}
+    <a href="#t:t/0">t</a> :: {BsonTk.Atom, term}
   </p>
   
 </div>
 <div class="type_detail">
   <p class="typespec" id="t:options/0">
-    <a href="#t:options/0">options</a> :: [pattern: term, opts: term] | [{<a href="http://elixir-lang.org/docs/master/String.html#t:t/0">String.t</a>, term}]
+    <a href="#t:options/0">options</a> :: [{:part, term}] | [{<a href="http://elixir-lang.org/docs/master/String.html#t:t/0">String.t</a>, term}]
   </p>
   
 </div>

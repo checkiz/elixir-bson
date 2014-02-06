@@ -28,10 +28,18 @@
       </h1>
 
       
+        <div id="moduledoc" class="docstring">
+          <p>Similarly to <a href="BsonEncoder.html"><code>BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
+Chunks are identified by tokens and isolate an element of a Bson document.</p>
+
+<p>There is one implementation of the protocol for every record defined in <a href="BsonTk.html"><code>BsonTk</code></a></p>
+
+        </div>
+      
 
       
         <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
-/lib/bson_decoder.ex#L2" target="_blank" class="view_source">Source</a>
+/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
       
 
       
@@ -41,6 +49,9 @@
         <table class="summary">
           <tr>
   <td class="summary_signature"><a href="#decode/2">decode(token, bson)</a></td>
+  
+    <td class="summary_synopsis"><p>Returns a elixir term decoded from a chunk of a Bson document.</p>
+</td>
   
 </tr>
 <tr>
@@ -80,10 +91,11 @@
     <strong>decode(token, bson)</strong>
   </p>
   
-  <div class="docstring"></div>
+  <div class="docstring"><p>Returns a elixir term decoded from a chunk of a Bson document.</p>
+</div>
   
     <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
-/lib/bson_decoder.ex#L3" target="_blank" class="view_source">Source</a>
+/lib/bson_decoder.ex#L14" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -101,7 +113,7 @@
   <div class="docstring"></div>
   
     <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
-/lib/bson_decoder.ex#L2" target="_blank" class="view_source">Source</a>
+/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -119,7 +131,7 @@
   <div class="docstring"></div>
   
     <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
-/lib/bson_decoder.ex#L2" target="_blank" class="view_source">Source</a>
+/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
   
 </div>
 

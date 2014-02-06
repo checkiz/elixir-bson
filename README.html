@@ -30,28 +30,34 @@
 
 <p>This project is used by <a href="https://github.com/checkiz/elixir-mongo">elixir-mongo</a>, a <a href="http://www.mongodb.org">MongoDB</a> driver in Elixir.</p>
 
-<p>This implementation maps the Bson grammar with Elixir terms in the following way:
-  - document: Keyword List
-  - int32 and int64: Integer
-  - double: Float
-  - string: String
-  - Array: List (non-keyword)
-  - binary: Bson.Bin (record)
-  - ObjectId: Bson.ObjectId (record)
-  - Boolean: true or false (Atom)
-  - UTC datetime: triple Atom
-  - Null value: nil (Atom)
-  - Regular expression: Bson.Regex (record)
-  - JavaScript: Bson.JS (record)
-  - Timestamp: Bson.Timestamp (record)
-  - Min and Max key: <code>MIN_KEY</code> or <code>MAX_KEY</code> (Atom)</p>
+<p>This implementation maps the Bson grammar with Elixir terms in the following way:</p>
+
+<ul>
+<li>document: Keyword List</li>
+<li>int32 and int64: Integer</li>
+<li>double: Float</li>
+<li>string: String</li>
+<li>Array: List (non-keyword)</li>
+<li>binary: Bson.Bin (record)</li>
+<li>ObjectId: Bson.ObjectId (record)</li>
+<li>Boolean: true or false (Atom)</li>
+<li>UTC datetime: triple Atom</li>
+<li>Null value: nil (Atom)</li>
+<li>Regular expression: Bson.Regex (record)</li>
+<li>JavaScript: Bson.JS (record)</li>
+<li>Timestamp: Bson.Timestamp (record)</li>
+<li>Min and Max key: <code>MIN_KEY</code> or <code>MAX_KEY</code> (Atom)</li>
+</ul>
 
 <p>This is how to encode a sample Elixir Keyword into a Bson Documentation:</p>
 
 <pre><code class="elixir">bson = Bson.encode a: 1, b: &quot;2&quot;, c: [1,2,3], d: [d1: 10, d2: 11]
 </code></pre>
 
-<p>In this case, <code>bson</code> would be a document with 4 elements (an Integer, a String, an Array and an embeded document)</p>
+<p>In this case, <code>bson</code> would be a document with 4 elements (an Integer, a String, an Array and an embeded document). This document would correspond in Javascript to:
+<code>javascript
+{a: 1, b: &quot;2&quot;, c: [1,2,3], d: {d1: 10, d2: 11}}
+</code></p>
 
 <p>Conversly, to decode a bson document:
 <code>elixir
@@ -64,7 +70,7 @@
 rebson = Bson.encode re: Bson.Regex.new pattern: &quot;\d*&quot;, opts: &quot;g&quot;
 </code></pre>
 
-<p>Implementation of encoders and decoders is done using <code>Protocol</code>, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the userdefined subtype)</p>
+<p>Implementation of encoders and decoders is done using <code>Protocol</code>, so, it is possible to redefine them (for instance, encoding end decoding of Bson.Bin could be redefined for the user defined subtype)</p>
 
     </div>
   </body>

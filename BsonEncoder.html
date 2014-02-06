@@ -29,8 +29,25 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p><a href="Bson.html"><code>Bson</code></a> provides encoding and decoding function for Bson format
-see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
+          <p><a href="BsonEncoder.html"><code>BsonEncoder</code></a> protocol defines Bson encoding according to Elixir types or Bson specific record (see <a href="Bson.html"><code>Bson</code></a>).</p>
+
+<p>List of the protocol implementations:</p>
+
+<ul>
+<li><code>Integer</code> - Encodes integer in 32 or 64 bits</li>
+<li><code>Float</code> - Encodes float in 64 bits</li>
+<li><code>Atom</code> - Encodes special atom (<code>false</code>, <code>true</code>, <code>nil</code>, 
+<code>:nan</code>, <code>:+inf</code>, <code>:-inf</code>, <code>MIN_KEY</code> and <code>MAX_KEY</code>) in appropriate format 
+others in special type Symbol</li>
+<li><code>Tuple</code> - Encodes the empty document <code>{}</code> and the return of <code>now/1</code></li>
+<li><code>BitString</code> - as binary string</li>
+<li><code>List</code> - Encodes a <code>Keyword</code> list as a document and any other list as array</li>
+<li>`Bson.Regex&#39; - see specs</li>
+<li>`Bson.ObjectId&#39; - see specs</li>
+<li>`Bson.JS&#39; - see specs</li>
+<li>`Bson.Bin&#39; - see specs</li>
+<li>`Bson.Timestamp  &#39; - see specs</li>
+</ul>
 
         </div>
       
@@ -48,7 +65,7 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
           <tr>
   <td class="summary_signature"><a href="#encode/2">encode(term, name)</a></td>
   
-    <td class="summary_synopsis"><p>Returns a binary representing a term in Bson format</p>
+    <td class="summary_synopsis"><p>Returns a binary representing a named term in Bson format</p>
 </td>
   
 </tr>
@@ -89,26 +106,7 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
     <strong>encode(term, name)</strong>
   </p>
   
-  <div class="docstring"><p>Returns a binary representing a term in Bson format</p>
-
-<p>This version implements it for the following types:</p>
-
-<ul>
-<li></li>
-<li><code>Integer</code> - Encodes integer in 32 or 64 bits</li>
-<li><code>Float</code> - Encodes float in 32 or 64 bits</li>
-<li><code>Atom</code> - Encodes special atom (<code>false</code>, <code>true</code>, <code>nil</code>, 
-<code>:nan</code>, <code>:+inf</code>, <code>:-inf</code>, <code>MIN_KEY</code> and <code>MAX_KEY</code>) in appropriate format 
-others in special type Symbol</li>
-<li><code>Tuple</code> - like the empty document <code>{}</code> and the return of <code>now/1</code></li>
-<li><code>BitString</code> - as binary string</li>
-<li><code>List</code> - Keyword List as document others as array</li>
-<li>`Bson.Regex&#39; - see specs</li>
-<li>`Bson.ObjectId&#39; - see specs</li>
-<li>`Bson.JS&#39; - see specs</li>
-<li>`Bson.Bin&#39; - see specs</li>
-<li>`Bson.Timestamp  &#39; - see specs</li>
-</ul>
+  <div class="docstring"><p>Returns a binary representing a named term in Bson format</p>
 </div>
   
     <a href="https://github.com/checkiz/elixir-bson/blob/bac17bc28ea7f2589dd8b298cd8f4cebe1ce7d17
