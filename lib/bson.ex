@@ -56,6 +56,15 @@ defmodule Bson do
 
     * `:oid` - contains a binary size 12
     """
+    defimpl Inspect, for: Bson.ObjectId do
+      def inspect(Bson.ObjectId[oid: nil],_), do: "ObjectId()"
+      def inspect(Bson.ObjectId[oid: oid],_) do
+        "ObjectId(" <>
+        (bc <<b::4>> inbits oid do
+          <<integer_to_binary(b,16)::binary>>
+        end |> String.downcase) <> ")"
+      end
+    end
   end
   defrecord Regex,
     pattern: "",
