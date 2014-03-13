@@ -20,10 +20,27 @@
     </script>
 
     <div id="content">
+      <div class="breadcrumbs">bson v0.1.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a></div>
+
       <h1>
         Bson
         
       </h1>
+
+      
+
+      <ul class="summary_links">
+        
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+      </ul>
 
       
         <div id="moduledoc" class="docstring">
@@ -32,21 +49,12 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
 
 <p>Usage:</p>
 
-<pre><code class="elixir">bigterm = [
+<pre><code class="elixir">term = %{
     a:  -4.230845,
     b:  &quot;hello&quot;,
-    k1: false,
-    k2: true,
-    p:  :anyatom,
-    q1: -2000444000,
-    q2: -8000111000222001,
-    c:  [x: -1, y: 2.2001],
+    c:  %{x: -1, y: 2.2001},
     d:  [23, 45, 200],
-    m:  nil,
-    l:  {1390, 470561, 277000},
-    s1: MIN_KEY,
-    s2: MAX_KEY
-    e:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
+    eeeeeeeee:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
                   bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;],
     f:  Bson.Bin[ subtype: Bson.Bin.subtyx(Function),
                   bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;],
@@ -63,13 +71,22 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
                           0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64, 16, 50,
                           0, 194, 7, 0, 0, 0, 0&gt;&gt;],
     j:  Bson.ObjectId[oid: &lt;&lt;82, 224, 229, 161, 0, 0, 2, 0, 3, 0, 0, 4&gt;&gt;],
+    k1: false,
+    k2: true,
+    l:  {1390, 470561, 277000},
+    m:  nil,
     n:  Bson.Regex[pattern: &quot;p&quot;, opts: &quot;o&quot;],
     o1: Bson.JS[code: &quot;function(x) = x + 1;&quot;],
-    o2: Bson.JS[scope: [x: 0, y: &quot;foo&quot;], code: &quot;function(a) = a + x&quot;],
+    o2: Bson.JS[scope: %{x: 0, y: &quot;foo&quot;}, code: &quot;function(a) = a + x&quot;],
+    p:  :atom,
+    q1: -2000444000,
+    q2: -8000111000222001,
     r:  Bson.Timestamp[inc: 1, ts: 2],
-  ]
-bigbson = Bson.encode(bigterm)
-bigterm = Bson.decode(bigbson)
+    s1: MIN_KEY,
+    s2: MAX_KEY
+  }
+bson = Bson.encode(term)
+term = Bson.decode(bson)
 </code></pre>
 
 <p>see <a href="#encode/1"><code>encode/1</code></a> and <a href="#decode/1"><code>decode/1</code></a></p>
@@ -78,14 +95,14 @@ bigterm = Bson.decode(bigbson)
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
+        <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
 /lib/bson.ex#L1" target="_blank" class="view_source">Source</a>
       
 
       
 
       
-        <h2 id="functions_summary">Functions summary</h2>
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
         <table class="summary">
           <tr>
   <td class="summary_signature"><a href="#bool/2">bool(bson, from)</a></td>
@@ -118,7 +135,7 @@ bigterm = Bson.decode(bigbson)
 <tr>
   <td class="summary_signature"><a href="#decode_v/2">decode_v(arg1, bson)</a></td>
   
-    <td class="summary_synopsis"><p>Decodes one array item. Here the name token is not decoded, it contains the position of the item in the list.</p>
+    <td class="summary_synopsis"><p>Decodes one array item. Here the name token is not decoded, it contains the position of the item in the list</p>
 </td>
   
 </tr>
@@ -132,7 +149,7 @@ bigterm = Bson.decode(bigbson)
 <tr>
   <td class="summary_signature"><a href="#encode/1">encode(term)</a></td>
   
-    <td class="summary_synopsis"><p>Returns a binary representing a Bson document.</p>
+    <td class="summary_synopsis"><p>Returns a binary representing a Bson document</p>
 </td>
   
 </tr>
@@ -206,94 +223,125 @@ bigterm = Bson.decode(bigbson)
       
 
       
-
-      
-
-      
         <div id="functions_details" class="details_list">
           <h2>Functions</h2>
           <div class="detail">
-  <p class="signature" id="bool/2">
-    <strong>bool(bson, from)</strong>
-  </p>
+  <div class="detail_header" id="bool/2">
+    <span class="signature"><strong>bool(bson, from)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#bool/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Formats true or false</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L201" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L210" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="decode/1">
-    <strong>decode(bson)</strong>
-  </p>
+  <div class="detail_header" id="decode/1">
+    <span class="signature"><strong>decode(bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#decode/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Returns a decoded term from a Bson binary</p>
 
 <p>see protocol <a href="BsonDecoder.html"><code>BsonDecoder</code></a></p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L148" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L157" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="decode/2">
-    <strong>decode(part, bson)</strong>
-  </p>
+  <div class="detail_header" id="decode/2">
+    <span class="signature"><strong>decode(part, bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#decode/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Same as <a href="#decode/1"><code>decode/1</code></a> but will start at a given postion in the binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L152" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L161" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="decode_kv/2">
-    <strong>decode_kv(arg1, bson)</strong>
-  </p>
+  <div class="detail_header" id="decode_kv/2">
+    <span class="signature"><strong>decode_kv(arg1, bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#decode_kv/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Decodes a key-value pair (one element of a document)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L250" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L259" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="decode_v/2">
-    <strong>decode_v(arg1, bson)</strong>
-  </p>
+  <div class="detail_header" id="decode_v/2">
+    <span class="signature"><strong>decode_v(arg1, bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#decode_v/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Decodes one array item. Here the name token is not decoded, it contains the position of the item in the list.</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L258" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L267" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="doc/1">
-    <strong>doc(s)</strong>
-  </p>
+  <div class="detail_header" id="doc/1">
+    <span class="signature"><strong>doc(s)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#doc/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Formats a bson document using the document strings (add size and trailing null character)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L181" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L190" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="encode/1">
-    <strong>encode(term)</strong>
-  </p>
+  <div class="detail_header" id="encode/1">
+    <span class="signature"><strong>encode(term)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#encode/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Returns a binary representing a Bson document.</p>
 
-<p>It accepts a Keyword list or the empty document <code>{}</code> and returns a binary</p>
+<p>It accepts a Map and returns a binary</p>
 
 <pre><code class="elixir">Bson.encode({}) == &lt;&lt;5, 0, 0, 0, 0&gt;&gt;
 Bson.encode(a: 1) == &lt;&lt;12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0&gt;&gt;
@@ -303,116 +351,161 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
 <p>It delegates this job to protocol <a href="BsonEncoder.html"><code>BsonEncoder</code></a></p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L138" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L147" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="float/2">
-    <strong>float(bson, off)</strong>
-  </p>
+  <div class="detail_header" id="float/2">
+    <span class="signature"><strong>float(bson, off)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#float/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Decodes a float from a binary at a given position. It will decode atoms nan, +inf and -inf as floats</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L229" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L238" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="int32/1">
-    <strong>int32(i)</strong>
-  </p>
+  <div class="detail_header" id="int32/1">
+    <span class="signature"><strong>int32(i)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#int32/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Formats a integer in a int32 binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L191" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L200" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="int32/2">
-    <strong>int32(bson, from)</strong>
-  </p>
+  <div class="detail_header" id="int32/2">
+    <span class="signature"><strong>int32(bson, from)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#int32/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Decodes an integer (int32) from a binary at a given position</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L211" target="_blank" class="view_source">Source</a>
-  
-</div>
-<div class="detail">
-  <p class="signature" id="int64/1">
-    <strong>int64(i)</strong>
-  </p>
-  
-  <div class="docstring"><p>Formats a integer in a int64 binary</p>
-</div>
-  
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L196" target="_blank" class="view_source">Source</a>
-  
-</div>
-<div class="detail">
-  <p class="signature" id="int64/2">
-    <strong>int64(bson, from)</strong>
-  </p>
-  
-  <div class="docstring"><p>Decodes an integer (int64) from a binary at a given position</p>
-</div>
-  
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
 /lib/bson.ex#L220" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="peek_cstring_end/3">
-    <strong>peek_cstring_end(bson, from, to)</strong>
-  </p>
+  <div class="detail_header" id="int64/1">
+    <span class="signature"><strong>int64(i)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#int64/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Formats a integer in a int64 binary</p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L205" target="_blank" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="int64/2">
+    <span class="signature"><strong>int64(bson, from)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#int64/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Decodes an integer (int64) from a binary at a given position</p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L229" target="_blank" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="peek_cstring_end/3">
+    <span class="signature"><strong>peek_cstring_end(bson, from, to)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#peek_cstring_end/3" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Peeks for the end of a cstring</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L242" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L251" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="string/1">
-    <strong>string(s)</strong>
-  </p>
+  <div class="detail_header" id="string/1">
+    <span class="signature"><strong>string(s)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#string/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Formats a bson string using the document strings (add size and trailing null character)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L186" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L195" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="tokenize/1">
-    <strong>tokenize(bson)</strong>
-  </p>
+  <div class="detail_header" id="tokenize/1">
+    <span class="signature"><strong>tokenize(bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#tokenize/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Returns tokens of the Bson document (no decoding)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L157" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L166" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="tokenize/2">
-    <strong>tokenize(arg1, bson)</strong>
-  </p>
+  <div class="detail_header" id="tokenize/2">
+    <span class="signature"><strong>tokenize(arg1, bson)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#tokenize/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Same as <a href="#tokenize/1"><code>tokenize/1</code></a> but will start at a given postion in the binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson.ex#L176" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/e1511805d224d864d7e91e44929c318c1eae0ce4
+/lib/bson.ex#L185" target="_blank" class="view_source">Source</a>
   
 </div>
 
