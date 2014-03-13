@@ -18,8 +18,8 @@ defmodule Bson.Test do
   end
 
   test "site sample" do
-    assert Bson.encode(hello: "world") == "\x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00"
-    assert Bson.encode(BSON: ["awesome", 5.05, 1986])
+    assert Bson.encode(%{hello: "world"}) == "\x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00"
+    assert Bson.encode(%{BSON: ["awesome", 5.05, 1986]})
     == <<49,0,0,0,4,66,83,79,78,0,38,0,0,0,2,48,0,8,0,0,0,97,119,101,115,111,109,101,0,1,49,0,51,51,51,51,51,51,20,64,16,50,0,194,7,0,0,0,0>>
   end
 
@@ -35,49 +35,46 @@ defmodule Bson.Test do
   end
 
   test "document" do
-    # {} to encode empty js object (will be decode as an empty keyword, though)
-    term = {}
+    # {} to encode empty js object (will be decode as an empty Map, though)
+    term = %{}
     bson = <<5, 0, 0, 0, 0>>
     assert Bson.encode(term) == bson
-    assert [] == Bson.decode(bson)
-    bson = <<13, 0, 0, 0, 3, 48, 0, 5, 0, 0, 0, 0, 0>>
-    assert ["0": []] == Bson.decode(bson)
-    assert Bson.encode([term]) == bson
+    assert %{} == Bson.decode(bson)
 
     # {a: 2}
-    term = [a: 2]
+    term = %{a: 2}
     bson = <<12, 0, 0, 0, 16, 97, 0, 2, 0, 0, 0, 0>>
     assert Bson.encode(term) == bson
     assert term == Bson.decode(bson)
 
     # {a: 1, b: 2}
-    term = [a: 1, b: 2]
+    term = %{a: 1, b: 2}
     bson = <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
     assert Bson.encode(term) == bson
     assert term == Bson.decode(bson)
 
     # {a: 1, b: {c: 2}}
-    term = [a: 1, b: [c: 2]]
+    term = %{a: 1, b: %{c: 2}}
     bson = <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 3, 98, 0, 12, 0, 0, 0, 16, 99, 0, 2, 0, 0, 0, 0, 0>>
     assert Bson.encode(term) == bson
     assert term == Bson.decode(bson)
   end
 
   test "array" do
-    term = [2,3]
+    term = %{"0": [2,3]}
     bson = <<27, 0, 0, 0, 4, 48, 0, 19, 0, 0, 0, 16, 48, 0, 2, 0, 0, 0, 16, 49, 0, 3, 0, 0, 0, 0, 0>>
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(term) == bson
+    assert term == Bson.decode(bson)
 
-    term = [1,[nil]]
+    term = %{"0": [1,[nil]]}
     bson = <<31, 0, 0, 0, 4, 48, 0, 23, 0, 0, 0, 16, 48, 0, 1, 0, 0, 0, 4, 49, 0, 8, 0, 0, 0, 10, 48, 0, 0, 0, 0>>
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(term) == bson
+    assert term == Bson.decode(bson)
 
-    term = [1,[2,3]]
+    term = %{"0": [1,[2,3]]}
     bson = <<42, 0, 0, 0, 4, 48, 0, 34, 0, 0, 0, 16, 48, 0, 1, 0, 0, 0, 4, 49, 0, 19, 0, 0, 0, 16, 48, 0, 2, 0, 0, 0, 16, 49, 0, 3, 0, 0, 0, 0, 0, 0>>
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(term) == bson
+    assert term == Bson.decode(bson)
   end
 
   test "ObjectId" do
@@ -86,63 +83,63 @@ defmodule Bson.Test do
     bson = <<20, 0, 0, 0, 7, 48, 0, 82, 224, 252, 230, 0, 0, 2, 0, 3, 0, 0, 4, 0>>
     term = Bson.ObjectId[oid: <<82, 224, 252, 230, 0, 0, 2, 0, 3, 0, 0, 4>>]
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "UTC" do
     term = {1,2,3000}
     bson = <<16, 0, 0, 0, 9, 48, 0, 211, 209, 154, 59, 0, 0, 0, 0, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "JS" do
     term = Bson.JS[code: "1+1;"]
     bson = <<17, 0, 0, 0, 13, 48, 0, 5, 0, 0, 0, 49, 43, 49, 59, 0, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "JS with scope" do
-    term = Bson.JS[scope: [a: 0, b: "c"],code: "1+1;"]
+    term = Bson.JS[scope: %{a: 0, b: "c"},code: "1+1;"]
     bson = <<42, 0, 0, 0, 15, 48, 0, 34, 0, 0, 0, 5, 0, 0, 0, 49, 43, 49, 59, 0, 21, 0, 0, 0, 16, 97, 0, 0, 0, 0, 0, 2, 98, 0, 2, 0, 0, 0, 99, 0, 0, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "regex" do
     term = Bson.Regex[pattern: "p", opts: "o"]
     bson = <<12, 0, 0, 0, 11, 48, 0, 112, 0, 111, 0, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "timestamp" do
     term = Bson.Timestamp[inc: 1, ts: 2]
     bson = <<16, 0, 0, 0, 17, 48, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "binary" do
     term = Bson.Bin[bin: "e", subtype: Bson.Bin.subtyx(User)]
     bson = <<14, 0, 0, 0, 5, 48, 0, 1, 0, 0, 0, 128, 101, 0>>
 
-    assert Bson.encode([term]) == bson
-    assert ["0": term] == Bson.decode(bson)
+    assert Bson.encode(%{"0": term}) == bson
+    assert %{"0": term} == Bson.decode(bson)
   end
 
   test "xdoc" do
-    term = [
+    term = %{
         a:  -4.230845,
         b:  "hello",
-        c:  [x: -1, y: 2.2001],
+        c:  %{x: -1, y: 2.2001},
         d:  [23, 45, 200],
         eeeeeeeee:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
                       bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
@@ -167,14 +164,14 @@ defmodule Bson.Test do
         m:  nil,
         n:  Bson.Regex[pattern: "p", opts: "o"],
         o1: Bson.JS[code: "function(x) = x + 1;"],
-        o2: Bson.JS[scope: [x: 0, y: "foo"], code: "function(a) = a + x"],
+        o2: Bson.JS[scope: %{x: 0, y: "foo"}, code: "function(a) = a + x"],
         p:  :atom,
         q1: -2000444000,
         q2: -8000111000222001,
         r:  Bson.Timestamp[inc: 1, ts: 2],
         s1: MIN_KEY,
         s2: MAX_KEY
-      ]
+      }
     bson =
     <<188,1,0,0,1,97,0,206,199,181,161,98,236,16,192,2,98,0,6,0,0,0,104,101,108,108,111,0,3,99,0,23,0,0,0,16,120,0,255,
     255,255,255,1,121,0,210,111,95,7,206,153,1,64,0,4,100,0,26,0,0,0,16,48,0,23,0,0,0,16,49,0,45,0,0,0,16,50,0,200,0,
@@ -190,11 +187,6 @@ defmodule Bson.Test do
 
     assert Bson.encode(term) == bson
     assert term == Bson.decode(bson)
-  end
-
-  test "invalid keyword" do
-    assert_raise BsonEncoder.List.Error,  fn -> Bson.encode([{:a, 0}, 1]) end
-    assert_raise BsonEncoder.List.Error,  fn -> Bson.encode([{:a, 0}, {"b", 2}]) end
   end
 
   test "invalid tuple" do

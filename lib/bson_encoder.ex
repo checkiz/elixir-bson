@@ -4,14 +4,15 @@ defprotocol BsonEncoder do
 
   List of the protocol implementations:
 
+  * `Map` - Encodes a map into a document
   * `Integer` - Encodes integer in 32 or 64 bits
   * `Float` - Encodes float in 64 bits
   * `Atom` - Encodes special atom (`false`, `true`, `nil`, 
   `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format 
   others in special type Symbol
-  * `Tuple` - Encodes the empty document `{}` and the return of `now/1`
+  * `Tuple` - Encodes the return of `now/1`
   * `BitString` - as binary string
-  * `List` - Encodes a `Keyword` list as a document and any other list as array
+  * `List` - Encodes a list as array
   * `Bson.Regex' - see specs
   * `Bson.ObjectId' - see specs
   * `Bson.JS' - see specs
@@ -73,8 +74,8 @@ defimpl BsonEncoder, for: Bson.JS do
   def encode(Bson.JS[code: js, scope: nil], name) when is_binary(js) do
     "\x0d" <> name <> "\x00" <> Bson.string(js)
   end
-  def encode(Bson.JS[code: js, scope: ctx], name) when is_binary(js) and is_list(ctx) do
-    "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.List.encode_e_list(ctx))
+  def encode(Bson.JS[code: js, scope: ctx], name) when is_binary(js) and is_map(ctx) do
+    "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.Map.encode_e_list(ctx))
   end
 
   defp js_ctx(jsctx), do: Bson.int32(size(jsctx)+4) <> jsctx
@@ -97,7 +98,6 @@ defimpl BsonEncoder, for: Tuple do
       reason
     end
   end
-  def encode({}, name),         do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
   def encode({a, s, o}, name) when is_integer(a) and is_integer(s) and is_integer(o) do
     "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
   end
@@ -111,35 +111,9 @@ defimpl BsonEncoder, for: BitString do
 end
 
 defimpl BsonEncoder, for: List do
-  defexception Error, reason: nil do
-    @moduledoc """
-    Only Keyword list or list of terms that can be encoded. If a list starts with key-value tuple it is assumed to be a Keyword List.
-    """
-    def message(Error[reason: reason]) do
-      reason
-    end
-  end
   # def encode([], name),                  do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
-  def encode([{k,_}|_] = kw, name) when is_atom(k) and k != Bson.ObjectId do
-    "\x03" <> name <> "\x00" <> encode_e_list(kw)
-  end
   def encode(array, name) when is_list(array) do
     "\x04" <> name <> "\x00" <> encode_array(array)
-  end
-
-  def encode_e_list(keyword) do
-    keyword
-      |> Enum.reduce([], &(reduce_kv_pair/2))
-      |> bitlist_to_bsondoc
-  end
-  defp reduce_kv_pair({k, v}, acc) when is_atom(k), do: [BsonEncoder.encode(v, k |> atom_to_binary)|acc]
-  defp reduce_kv_pair(item, _) do
-    case item do
-      {k, _} ->
-        raise Error, reason: to_string(k) <> "key is not an atom (in a list that looks like a Keyword)"
-      _ ->
-        raise Error, reason: "cannot encode an item that is not a key-value pair (in a list that looks like a Keyword)"
-    end
   end
 
   defp encode_array(arr) do
@@ -153,3 +127,22 @@ defimpl BsonEncoder, for: List do
   defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
 
 end
+
+defimpl BsonEncoder, for: Map do
+  # def encode(%{}, name),                  do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
+  def encode(map, name) do
+    "\x03" <> name <> "\x00" <> encode_e_list(map)
+  end
+
+  def encode_e_list(map) do
+    :maps.fold( fn 
+      k, v, acc when is_atom(k) -> [BsonEncoder.encode(v, k |> atom_to_binary)|acc]
+      k, v, acc -> [BsonEncoder.encode(v, Bson.encode(k))|acc]
+    end, [], map)
+      |> bitlist_to_bsondoc
+  end
+
+  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
+
+end
+

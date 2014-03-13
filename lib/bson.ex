@@ -6,21 +6,12 @@ defmodule Bson do
   Usage:
 
   ```elixir
-  bigterm = [
+  term = %{
       a:  -4.230845,
       b:  "hello",
-      k1: false,
-      k2: true,
-      p:  :anyatom,
-      q1: -2000444000,
-      q2: -8000111000222001,
-      c:  [x: -1, y: 2.2001],
+      c:  %{x: -1, y: 2.2001},
       d:  [23, 45, 200],
-      m:  nil,
-      l:  {1390, 470561, 277000},
-      s1: MIN_KEY,
-      s2: MAX_KEY
-      e:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
+      eeeeeeeee:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
                     bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
       f:  Bson.Bin[ subtype: Bson.Bin.subtyx(Function),
                     bin:  <<200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0>>],
@@ -37,13 +28,22 @@ defmodule Bson do
                             0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64, 16, 50,
                             0, 194, 7, 0, 0, 0, 0>>],
       j:  Bson.ObjectId[oid: <<82, 224, 229, 161, 0, 0, 2, 0, 3, 0, 0, 4>>],
+      k1: false,
+      k2: true,
+      l:  {1390, 470561, 277000},
+      m:  nil,
       n:  Bson.Regex[pattern: "p", opts: "o"],
       o1: Bson.JS[code: "function(x) = x + 1;"],
-      o2: Bson.JS[scope: [x: 0, y: "foo"], code: "function(a) = a + x"],
+      o2: Bson.JS[scope: %{x: 0, y: "foo"}, code: "function(a) = a + x"],
+      p:  :atom,
+      q1: -2000444000,
+      q2: -8000111000222001,
       r:  Bson.Timestamp[inc: 1, ts: 2],
-    ]
-  bigbson = Bson.encode(bigterm)
-  bigterm = Bson.decode(bigbson)
+      s1: MIN_KEY,
+      s2: MAX_KEY
+    }
+  bson = Bson.encode(term)
+  term = Bson.decode(bson)
   ```
 
   see `encode/1` and `decode/1`
@@ -83,7 +83,7 @@ defmodule Bson do
     Represents a Javascript function and optionally its scope 
 
     * `:code` - a bynary that is the function code
-    * `:scope` - a Keyword representing a bson document, the scope of the function
+    * `:scope` - a Map representing a bson document, the scope of the function
     """
   end
   defrecord Timestamp,
@@ -133,7 +133,7 @@ defmodule Bson do
   @doc """
   Returns a binary representing a Bson document.
 
-  It accepts a Keyword list or the empty document `{}` and returns a binary
+  It accepts a Map and returns a binary
 
   ```elixir
   Bson.encode({}) == <<5, 0, 0, 0, 0>>
@@ -154,7 +154,7 @@ defmodule Bson do
 
   see protocol `BsonDecoder`
   """
-  def decode(bson), do: tokenize(bson) |> Enum.map &(decode_kv(&1, bson))
+  def decode(bson), do: tokenize(bson) |> Enum.map(&decode_kv(&1, bson)) |> :maps.from_list
   @doc """
   Same as `decode/1` but will start at a given postion in the binary
   """

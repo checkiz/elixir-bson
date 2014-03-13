@@ -41,7 +41,8 @@ end
 defimpl BsonDecoder, for: BsonTk.Doc do
   def decode(BsonTk.Doc[part: {from, len}], bson) do
     BsonTk.tokenize_e_list(bson, from, from+len)
-      |> Enum.map &(Bson.decode_kv(&1, bson))
+      |> Enum.map(&Bson.decode_kv(&1, bson))
+      |> :maps.from_list
   end
 end
 
