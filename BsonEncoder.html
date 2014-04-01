@@ -20,6 +20,8 @@
     </script>
 
     <div id="content">
+      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonEncoder.html">BsonEncoder</a></div>
+
       <h1>
         BsonEncoder
         
@@ -28,20 +30,38 @@
       </h1>
 
       
+
+      <ul class="summary_links">
+        
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+          <li><a href="#types_details">Types</a></li>
+        
+      </ul>
+
+      
         <div id="moduledoc" class="docstring">
           <p><a href="BsonEncoder.html"><code>BsonEncoder</code></a> protocol defines Bson encoding according to Elixir types or Bson specific record (see <a href="Bson.html"><code>Bson</code></a>).</p>
 
 <p>List of the protocol implementations:</p>
 
 <ul>
+<li><code>Map</code> - Encodes a map into a document</li>
 <li><code>Integer</code> - Encodes integer in 32 or 64 bits</li>
 <li><code>Float</code> - Encodes float in 64 bits</li>
 <li><code>Atom</code> - Encodes special atom (<code>false</code>, <code>true</code>, <code>nil</code>, 
 <code>:nan</code>, <code>:+inf</code>, <code>:-inf</code>, <code>MIN_KEY</code> and <code>MAX_KEY</code>) in appropriate format 
 others in special type Symbol</li>
-<li><code>Tuple</code> - Encodes the empty document <code>{}</code> and the return of <code>now/1</code></li>
+<li><code>Tuple</code> - Encodes the return of <code>now/1</code></li>
 <li><code>BitString</code> - as binary string</li>
-<li><code>List</code> - Encodes a <code>Keyword</code> list as a document and any other list as array</li>
+<li><code>List</code> - Encodes a list as array</li>
 <li>`Bson.Regex&#39; - see specs</li>
 <li>`Bson.ObjectId&#39; - see specs</li>
 <li>`Bson.JS&#39; - see specs</li>
@@ -53,14 +73,14 @@ others in special type Symbol</li>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
+        <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
 /lib/bson_encoder.ex#L1" target="_blank" class="view_source">Source</a>
       
 
       
 
       
-        <h2 id="functions_summary">Functions summary</h2>
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
         <table class="summary">
           <tr>
   <td class="summary_signature"><a href="#encode/2">encode(term, name)</a></td>
@@ -70,11 +90,11 @@ others in special type Symbol</li>
   
 </tr>
 <tr>
-  <td class="summary_signature"><a href="#impl_for/1">impl_for(data)</a></td>
+  <td class="summary_signature"><a href="#impl_for!/1">impl_for!(data)</a></td>
   
 </tr>
 <tr>
-  <td class="summary_signature"><a href="#impl_for!/1">impl_for!(data)</a></td>
+  <td class="summary_signature"><a href="#impl_for/1">impl_for(arg)</a></td>
   
 </tr>
 
@@ -82,12 +102,8 @@ others in special type Symbol</li>
       
 
       
-
-      
-
-      
         <div id="types_details" class="details_list">
-          <h2>Types</h2>
+          <h2>Types <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
           <div class="type_detail">
   <p class="typespec" id="t:t/0">
     <a href="#t:t/0">t</a> :: term
@@ -102,21 +118,31 @@ others in special type Symbol</li>
         <div id="functions_details" class="details_list">
           <h2>Functions</h2>
           <div class="detail">
-  <p class="signature" id="encode/2">
-    <strong>encode(term, name)</strong>
-  </p>
+  <div class="detail_header" id="encode/2">
+    <span class="signature"><strong>encode(term, name)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#encode/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
   <div class="docstring"><p>Returns a binary representing a named term in Bson format</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
-/lib/bson_encoder.ex#L27" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
+/lib/bson_encoder.ex#L28" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="impl_for/1">
-    <strong>impl_for(data)</strong>
-  </p>
+  <div class="detail_header" id="impl_for/1">
+    <span class="signature"><strong>impl_for(arg)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#impl_for/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
     <p>Specs:</p>
     <ul class="spec">
@@ -127,14 +153,19 @@ others in special type Symbol</li>
   
   <div class="docstring"></div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
+    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
 /lib/bson_encoder.ex#L1" target="_blank" class="view_source">Source</a>
   
 </div>
 <div class="detail">
-  <p class="signature" id="impl_for!/1">
-    <strong>impl_for!(data)</strong>
-  </p>
+  <div class="detail_header" id="impl_for!/1">
+    <span class="signature"><strong>impl_for!(data)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#impl_for!/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
   
     <p>Specs:</p>
     <ul class="spec">
@@ -145,7 +176,7 @@ others in special type Symbol</li>
   
   <div class="docstring"></div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/13495344fd98e6b1c58225fef8dfd58d0835022c
+    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
 /lib/bson_encoder.ex#L1" target="_blank" class="view_source">Source</a>
   
 </div>

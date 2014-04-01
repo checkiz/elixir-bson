@@ -20,6 +20,7 @@
     </script>
 
     <div id="content">
+      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="readme.html">README</a></div>
       <h1>elixir-bson</h1>
 
 <p>BSON implementation for Elixir Language</p>
@@ -36,7 +37,7 @@
 <p>This implementation maps the Bson grammar with Elixir terms in the following way:</p>
 
 <ul>
-<li>document: Keyword List</li>
+<li>document: Map</li>
 <li>int32 and int64: Integer</li>
 <li>double: Float</li>
 <li>string: String</li>
@@ -52,19 +53,19 @@
 <li>Min and Max key: <code>MIN_KEY</code> or <code>MAX_KEY</code> (Atom)</li>
 </ul>
 
-<p>This is how to encode a sample Elixir Keyword into a Bson Documentation:</p>
+<p>This is how to encode a sample Elixir Map into a Bson Document:</p>
 
-<pre><code class="elixir">bson = Bson.encode a: 1, b: &quot;2&quot;, c: [1,2,3], d: [d1: 10, d2: 11]
+<pre><code class="elixir">bson = Bson.encode %{a: 1, b: &quot;2&quot;, c: [1,2,3], d: %{d1: 10, d2: 11} }
 </code></pre>
 
 <p>In this case, <code>bson</code> would be a document with 4 elements (an Integer, a String, an Array and an embeded document). This document would correspond in Javascript to:
 <code>javascript
-{a: 1, b: &quot;2&quot;, c: [1,2,3], d: {d1: 10, d2: 11}}
+{a: 1, b: &quot;2&quot;, c: [1,2,3], d: {d1: 10, d2: 11} }
 </code></p>
 
 <p>Conversly, to decode a bson document:
 <code>elixir
-[a: 1] == Bson.decode &lt;&lt;12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0&gt;&gt;
+%{a: 1} == Bson.decode &lt;&lt;12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0&gt;&gt;
 </code></p>
 
 <p>Special Bson element that do not have obvious corresponding type in Elixir are represented with Record, for example:</p>
