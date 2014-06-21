@@ -4,8 +4,8 @@ defmodule Bson.Mixfile do
   def project do
     [ app: :bson,
       name: "bson",
-      version: "0.2.0",
-      elixir: "~> 0.13.0-dev",
+      version: "0.3.0",
+      elixir: "~> 0.14.1",
       source_url: "https://github.com/checkiz/elixir-bson",
       deps: deps(Mix.env),
       docs: &docs/0 ]

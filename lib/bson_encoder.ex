@@ -55,26 +55,26 @@ defimpl BsonEncoder, for: Atom do
   def encode(:'-inf', name), do: "\x01" <> name <> "\x00" <> <<0, 0, 0, 0, 0, 0, 240, 255>>
   def encode(MIN_KEY, name), do: <<0xff>> <> name <> "\x00"
   def encode(MAX_KEY, name), do: "\x7f" <> name <> "\x00"
-  def encode(atom, name),    do: "\x0e" <> name <> "\x00" <> Bson.string(atom_to_binary(atom))
+  def encode(atom, name),    do: "\x0e" <> name <> "\x00" <> Bson.string(Atom.to_string(atom))
 end
 
 defimpl BsonEncoder, for: Bson.Regex do
-  def encode(Bson.Regex[pattern: p, opts: o], name) when is_binary(p) and is_binary(o) do
+  def encode(%Bson.Regex{pattern: p, opts: o}, name) when is_binary(p) and is_binary(o) do
     "\x0b" <> name <> "\x00" <> p <> "\x00" <> o <> "\x00"
   end
 end
 
 defimpl BsonEncoder, for: Bson.ObjectId do
-  def encode(Bson.ObjectId[oid: oid], name) when is_binary(oid) do
+  def encode(%Bson.ObjectId{oid: oid}, name) when is_binary(oid) do
     "\x07" <> name <> "\x00" <> oid
   end
 end
 
 defimpl BsonEncoder, for: Bson.JS do
-  def encode(Bson.JS[code: js, scope: nil], name) when is_binary(js) do
+  def encode(%Bson.JS{code: js, scope: nil}, name) when is_binary(js) do
     "\x0d" <> name <> "\x00" <> Bson.string(js)
   end
-  def encode(Bson.JS[code: js, scope: ctx], name) when is_binary(js) and is_map(ctx) do
+  def encode(%Bson.JS{code: js, scope: ctx}, name) when is_binary(js) and is_map(ctx) do
     "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.Map.encode_e_list(ctx))
   end
 
@@ -82,27 +82,25 @@ defimpl BsonEncoder, for: Bson.JS do
 end
 
 defimpl BsonEncoder, for: Bson.Bin do
-  def encode(Bson.Bin[bin: bin, subtype: subtype], name), do:  "\x05" <> name <> "\x00" <> Bson.int32(size(bin)) <> subtype <> bin
+  def encode(%Bson.Bin{bin: bin, subtype: subtype}, name), do:  "\x05" <> name <> "\x00" <> Bson.int32(size(bin)) <> subtype <> bin
 end
 
 defimpl BsonEncoder, for: Bson.Timestamp do
-  def encode(Bson.Timestamp[inc: i, ts: t], name),        do:  "\x11" <> name <> "\x00" <> Bson.int32(i) <> Bson.int32(t)
+  def encode(%Bson.Timestamp{inc: i, ts: t}, name),        do:  "\x11" <> name <> "\x00" <> Bson.int32(i) <> Bson.int32(t)
 end
 
 defimpl BsonEncoder, for: Tuple do
-  defexception Error, reason: nil do
+  defmodule Error do
+    defexception [:message]
     @moduledoc """
     Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0
     """
-    def message(Error[reason: reason]) do
-      reason
-    end
   end
   def encode({a, s, o}, name) when is_integer(a) and is_integer(s) and is_integer(o) do
     "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
   end
   def encode(t, name) do
-    raise Error, reason: "cannot encode tuple of size " <> to_string(size(t)) <> " (" <> name <> ")"
+    raise Error, message: "cannot encode tuple of size " <> to_string(size(t)) <> " (" <> name <> ")"
   end
 end
 
@@ -119,12 +117,12 @@ defimpl BsonEncoder, for: List do
   defp encode_array(arr) do
     {_, arrbin } = arr
       |> Enum.reduce({0, []}, fn(item, {n, acc}) ->
-          {n+1, [BsonEncoder.encode(item, n |> integer_to_binary) | acc]}
+          {n+1, [BsonEncoder.encode(item, n |> Integer.to_string) | acc]}
         end)
     arrbin |> bitlist_to_bsondoc
   end
 
-  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
+  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> IO.iodata_to_binary |> Bson.doc
 
 end
 
@@ -136,13 +134,13 @@ defimpl BsonEncoder, for: Map do
 
   def encode_e_list(map) do
     :maps.fold( fn 
-      k, v, acc when is_atom(k) -> [BsonEncoder.encode(v, k |> atom_to_binary)|acc]
+      k, v, acc when is_atom(k) -> [BsonEncoder.encode(v, k |> Atom.to_string)|acc]
       k, v, acc -> [BsonEncoder.encode(v, Bson.encode(k))|acc]
     end, [], map)
       |> bitlist_to_bsondoc
   end
 
-  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> iolist_to_binary |> Bson.doc
+  defp bitlist_to_bsondoc(arrbin), do: arrbin |> Enum.reverse |> IO.iodata_to_binary |> Bson.doc
 
 end
 

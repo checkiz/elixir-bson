@@ -18,7 +18,7 @@ defmodule BsonJson do
   """
   def stringify(bson) do
     case document(bson) do
-      {acc, rest} -> {acc|>List.flatten|>iolist_to_binary, rest}
+      {acc, rest} -> {acc|>List.flatten|>IO.iodata_to_binary, rest}
     end
   end
   defp int32(<<i::[size(32),signed,little], rest::binary>>), do: {to_string(i), rest}
@@ -37,8 +37,8 @@ defmodule BsonJson do
       rest }
   end
   defp objectid(<<oid::96, rest::binary>>) do
-    {<<?">> <> (bc <<b::4>> inbits <<oid::96>> do
-          <<integer_to_binary(b,16)::binary>>
+    {<<?">> <> (for << <<b::size(4)>> <- <<oid::size(96)>> >>, into: <<>> do
+          <<Integer.to_string(b,16)::binary>>
         end |> String.downcase) <> <<?">>, rest}
   end
 
@@ -78,7 +78,7 @@ defmodule BsonJson do
     end
   end
 
-  defp peek_cstring(<<0, rest::binary>>, acc), do: {acc|>Enum.reverse|>iolist_to_binary, rest}
+  defp peek_cstring(<<0, rest::binary>>, acc), do: {acc|>Enum.reverse|>IO.iodata_to_binary, rest}
   defp peek_cstring(<<c, rest::binary>>, acc), do: peek_cstring(rest, [c|acc])
   defp peek_cstring("", _acc), do: raise "bson corrupted: expecting cstring end mark"
 end

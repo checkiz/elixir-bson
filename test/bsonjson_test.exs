@@ -13,13 +13,10 @@ defmodule BsonJson.Test do
   end
 
   test "ObjectId" do
-    term = Bson.ObjectId[oid: <<82, 224, 252, 230, 0, 0, 2, 0, 3, 0, 0, 4>>]
+    term = %Bson.ObjectId{oid: <<82, 224, 252, 230, 0, 0, 2, 0, 3, 0, 0, 4>>}
     bson = Bson.encode(%{"0": term})
 
     assert {"{\"0\":\"52e0fce60000020003000004\"}", ""} == BsonJson.stringify(bson)
-  end
-  test "dono" do
-  	bson = <<27, 0, 0, 0, 2, 85, 110, 105, 113, 117, 101, 67, 97, 114, 114, 105, 101, 114, 0, 3, 0, 0, 0, 87, 78, 0, 0>>
   end
 
 end

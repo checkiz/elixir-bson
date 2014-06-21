@@ -49,26 +49,25 @@ defmodule Bson do
   see `encode/1` and `decode/1`
 
   """
-  defrecord ObjectId,
-    oid: nil do
+  defmodule ObjectId do
+    defstruct oid: nil
     @moduledoc """
     Represents the [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/)
 
     * `:oid` - contains a binary size 12
     """
+  end
     defimpl Inspect, for: Bson.ObjectId do
-      def inspect(Bson.ObjectId[oid: nil],_), do: "ObjectId()"
-      def inspect(Bson.ObjectId[oid: oid],_) do
+      def inspect(%Bson.ObjectId{oid: nil},_), do: "ObjectId()"
+      def inspect(%Bson.ObjectId{oid: oid},_) do
         "ObjectId(" <>
-        (bc <<b::4>> inbits oid do
-          <<integer_to_binary(b,16)::binary>>
+        (for <<b::4<-oid>>  do
+          <<Integer.to_string(b,16)::binary>>
         end |> String.downcase) <> ")"
       end
     end
-  end
-  defrecord Regex,
-    pattern: "",
-    opts: "" do
+  defmodule Regex do
+    defstruct pattern: "", opts: ""
     @moduledoc """
     Represents a Regex 
 
@@ -76,9 +75,8 @@ defmodule Bson do
     * `:opts` - a bianry that contains the regex options string identified by characters, which must be stored in alphabetical order. Valid options are 'i' for case insensitive matching, 'm' for multiline matching, 'x' for verbose mode, 'l' to make \w, \W, etc. locale dependent, 's' for dotall mode ('.' matches everything), and 'u' to make \w, \W, etc. match unicode
     """
   end
-  defrecord JS,
-    code: "",
-    scope: nil do
+  defmodule JS do
+    defstruct code: "", scope: nil
     @moduledoc """
     Represents a Javascript function and optionally its scope 
 
@@ -86,16 +84,14 @@ defmodule Bson do
     * `:scope` - a Map representing a bson document, the scope of the function
     """
   end
-  defrecord Timestamp,
-    inc: nil,
-    ts: nil do
+  defmodule Timestamp do
+    defstruct inc: nil, ts: nil
     @moduledoc """
     Represents the special internal type Timestamp used by MongoDB
     """
   end
-  defrecord Bin,
-    bin: "",
-    subtype: "\x00" do
+  defmodule Bin do
+    defstruct bin: "", subtype: "\x00"
     @moduledoc """
     Represents Binary data
     """
@@ -257,7 +253,7 @@ defmodule Bson do
   Decodes a key-value pair (one element of a document)
   """
   def decode_kv({tk_name, tk_element}, bson) do
-    { :erlang.binary_part(bson, tk_name) |> binary_to_atom,
+    { :erlang.binary_part(bson, tk_name) |> String.to_atom,
       BsonDecoder.decode(tk_element, bson)}
   end
 
