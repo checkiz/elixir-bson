@@ -154,7 +154,7 @@ defmodule Bson do
   @doc """
   Same as `decode/1` but will start at a given postion in the binary
   """
-  def decode(part, bson), do: tokenize(part, bson) |> Enum.map (&decode_kv(&1, bson)) |> :maps.from_list
+  def decode(part, bson), do: tokenize(part, bson) |> Enum.map(&decode_kv(&1, bson)) |> :maps.from_list
 
   @doc """
   Returns tokens of the Bson document (no decoding)
