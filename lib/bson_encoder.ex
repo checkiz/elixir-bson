@@ -1,6 +1,6 @@
 defprotocol BsonEncoder do
   @moduledoc """
-  `BsonEncoder` protocol defines Bson encoding according to Elixir types or Bson specific record (see `Bson`).
+  `BsonEncoder` protocol defines Bson encoding according to Elixir types or Bson specific struct (see `Bson`).
 
   List of the protocol implementations:
 

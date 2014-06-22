@@ -112,12 +112,12 @@ defmodule BsonTk do
   @doc """
   tokenize one element value of bson starting at position `from`.
   Based on the tag in front of an element of a Bson document (see e_list in specs),
-  it identifies the element type and created the appropriate BsonTk record.
+  it identifies the element type and created the appropriate BsonTk struct.
 
   It returns {`tk_element`, `tk_end`} where:
 
   * `tk_element` - is the token of the element value. It can be an atom `nil`, `MIN_KEY`, `MAX_KEY`
-  or a record
+  or a struct
   (`BsonTk.Int32`, `BsonTk.Int64`, `BsonTk.Float`, `BsonTk.Doc`, `BsonTk.Array`, `BsonTk.String`, `BsonTk.Atom`,
   `BsonTk.Bool`, `BsonTk.ObjectId`, `BsonTk.Bin`, `BsonTk.Regex`, `BsonTk.JS`, `BsonTk.Now`, `BsonTk.Timestamp`)
   * `tk_end` - is the end position of the element

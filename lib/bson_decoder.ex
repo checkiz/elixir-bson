@@ -3,7 +3,7 @@ defprotocol BsonDecoder do
   Similarly to `BsonEncoder`, this protocol defines decoding of chunks of Bson document.
   Chunks are identified by tokens and isolate an element of a Bson document.
 
-  There is one implementation of the protocol for every record defined in `BsonTk`
+  There is one implementation of the protocol for every struct defined in `BsonTk`
 
   """
 
