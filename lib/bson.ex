@@ -74,7 +74,7 @@ defmodule Bson do
       def inspect(%Bson.ObjectId{oid: nil},_), do: "ObjectId()"
       def inspect(%Bson.ObjectId{oid: oid},_) do
         "ObjectId(" <>
-        (for <<b::4<-oid>>  do
+        (for <<b::4<-oid>>, into: <<>> do
           <<Integer.to_string(b,16)::binary>>
         end |> String.downcase) <> ")"
       end
