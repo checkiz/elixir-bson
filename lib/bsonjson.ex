@@ -21,19 +21,19 @@ defmodule BsonJson do
       {acc, rest} -> {acc|>List.flatten|>IO.iodata_to_binary, rest}
     end
   end
-  defp int32(<<i::[size(32),signed,little], rest::binary>>), do: {to_string(i), rest}
-  defp int64(<<i::[size(64),signed,little], rest::binary>>), do: {to_string(i), rest}
+  defp int32(<<i::size(32)-signed-little, rest::binary>>), do: {to_string(i), rest}
+  defp int64(<<i::size(64)-signed-little, rest::binary>>), do: {to_string(i), rest}
 
   defp float(<<0, 0, 0, 0, 0, 0, 248, 127, rest::binary>>), do: {"null", rest} #nan
   defp float(<<0, 0, 0, 0, 0, 0, 248, 255, rest::binary>>), do: {"null", rest} #nan
   defp float(<<0, 0, 0, 0, 0, 0, 240, 127, rest::binary>>), do: {"9007199254740992", rest}  #+inf
   defp float(<<0, 0, 0, 0, 0, 0, 240, 255, rest::binary>>), do: {"-9007199254740992", rest} #-inf
-  defp float(<<f::[size(64),float,little], rest::binary>>), do: {to_string(f), rest}
+  defp float(<<f::size(64)-float-little, rest::binary>>), do: {to_string(f), rest}
 
-  defp string(<<l::[size(32),signed,little], rest::binary>>) do
+  defp string(<<l::size(32)-signed-little, rest::binary>>) do
     bitsize = (l-1)*8
-    <<string::[size(bitsize)], 0, rest::binary>> = rest
-    { [?", <<string::[size(bitsize)]>>, ?"],
+    <<string::size(bitsize), 0, rest::binary>> = rest
+    { [?", <<string::size(bitsize)>>, ?"],
       rest }
   end
   defp objectid(<<oid::96, rest::binary>>) do
@@ -42,10 +42,10 @@ defmodule BsonJson do
         end |> String.downcase) <> <<?">>, rest}
   end
 
-  defp document(<<l::[size(32),signed,little], rest::binary>>) do
+  defp document(<<l::size(32)-signed-little, rest::binary>>) do
     bitsize = (l-5)*8
-    <<bsondoc::[size(bitsize)], 0, rest::binary>> = rest
-    { document(<<bsondoc::[size(bitsize)]>>, '', '{'), rest}
+    <<bsondoc::size(bitsize), 0, rest::binary>> = rest
+    { document(<<bsondoc::size(bitsize)>>, '', '{'), rest}
   end
   defp document("", _, acc), do: Enum.reverse([?}|acc])
   defp document(<<head, rest::binary>>, prefix, acc) do
@@ -54,10 +54,10 @@ defmodule BsonJson do
     document(rest, ?,, [el_value, ?:, ?", el_name, ?", prefix | acc])
   end
 
-  defp array(<<l::[size(32),signed,little], rest::binary>>) do
+  defp array(<<l::size(32)-signed-little, rest::binary>>) do
     bitsize = (l-5)*8
-    <<bsondoc::[size(bitsize)], 0, rest::binary>> = rest
-    { array(<<bsondoc::[size(bitsize)]>>, '', [?[]), rest}    
+    <<bsondoc::size(bitsize), 0, rest::binary>> = rest
+    { array(<<bsondoc::size(bitsize)>>, '', [?[]), rest}    
   end
   defp array("", _, acc), do: Enum.reverse([?]|acc])
   defp array(<<head, rest::binary>>, prefix, acc) do

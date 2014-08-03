@@ -42,7 +42,7 @@ end
 defimpl BsonEncoder, for: Float do
   def encode(f, name), do: "\x01" <> name <> "\x00" <> float(f)
 
-  defp float(f),   do: <<(f)::[size(64),float,little]>>
+  defp float(f),   do: <<(f)::size(64)-float-little>>
 end
 
 defimpl BsonEncoder, for: Atom do

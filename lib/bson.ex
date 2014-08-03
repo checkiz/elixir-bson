@@ -206,12 +206,12 @@ defmodule Bson do
   @doc """
   Formats a integer in a int32 binary
   """
-  def int32(i),   do: <<(i)::[size(32),signed,little]>>
+  def int32(i),   do: <<(i)::size(32)-signed-little>>
 
   @doc """
   Formats a integer in a int64 binary
   """
-  def int64(i),   do: <<(i)::[size(64),signed,little]>>
+  def int64(i),   do: <<(i)::size(64)-signed-little>>
 
   @doc """
   Formats true or false
@@ -228,7 +228,7 @@ defmodule Bson do
   """
   def int32(bson, from) do
     at  = from*8
-    <<_::[size(at)], i::[size(32),signed,little], _::binary>> = bson
+    <<_::size(at), i::size(32)-signed-little, _::binary>> = bson
     i
   end
 
@@ -237,7 +237,7 @@ defmodule Bson do
   """
   def int64(bson, from) do
     at  = from*8
-    <<_::[size(at)], i::[size(64),signed,little], _::binary>> = bson
+    <<_::size(at), i::size(64)-signed-little, _::binary>> = bson
     i
   end
 
@@ -250,7 +250,7 @@ defmodule Bson do
       <<0, 0, 0, 0, 0, 0, 248, 255>> -> :nan
       <<0, 0, 0, 0, 0, 0, 240, 127>> -> :'+inf'
       <<0, 0, 0, 0, 0, 0, 240, 255>> -> :'-inf'
-      <<f::[size(64),float,little]>> -> f
+      <<f::size(64)-float-little>> -> f
     end
   end
 
