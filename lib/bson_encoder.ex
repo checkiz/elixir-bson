@@ -42,7 +42,7 @@ end
 defimpl BsonEncoder, for: Float do
   def encode(f, name), do: "\x01" <> name <> "\x00" <> float(f)
 
-  defp float(f),   do: <<(f)::[size(64),float,little]>>
+  defp float(f),   do: <<(f)::size(64)-float-little>>
 end
 
 defimpl BsonEncoder, for: Atom do
@@ -78,11 +78,11 @@ defimpl BsonEncoder, for: Bson.JS do
     "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.Map.encode_e_list(ctx))
   end
 
-  defp js_ctx(jsctx), do: Bson.int32(size(jsctx)+4) <> jsctx
+  defp js_ctx(jsctx), do: Bson.int32(byte_size(jsctx)+4) <> jsctx
 end
 
 defimpl BsonEncoder, for: Bson.Bin do
-  def encode(%Bson.Bin{bin: bin, subtype: subtype}, name), do:  "\x05" <> name <> "\x00" <> Bson.int32(size(bin)) <> subtype <> bin
+  def encode(%Bson.Bin{bin: bin, subtype: subtype}, name), do:  "\x05" <> name <> "\x00" <> Bson.int32(byte_size(bin)) <> subtype <> bin
 end
 
 defimpl BsonEncoder, for: Bson.Timestamp do
@@ -100,7 +100,7 @@ defimpl BsonEncoder, for: Tuple do
     "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
   end
   def encode(t, name) do
-    raise Error, message: "cannot encode tuple of size " <> to_string(size(t)) <> " (" <> name <> ")"
+    raise Error, message: "cannot encode tuple of size " <> to_string(tuple_size(t)) <> " (" <> name <> ")"
   end
 end
 
