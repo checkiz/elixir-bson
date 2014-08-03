@@ -5,8 +5,8 @@ defmodule Bson.Mixfile do
     [ app: :bson,
       name: "bson",
       version: "0.3.0",
-      elixir: "~> 0.14.2",
-      source_url: "https://github.com/checkiz/elixir-bson",
+      elixir: "~> 0.15.0",
+      source_url: "https://github.com/mkolosick/elixir-bson",
       deps: deps(Mix.env),
       docs: &docs/0 ]
   end
@@ -25,6 +25,6 @@ defmodule Bson.Mixfile do
   defp docs do
     [ readme: true,
       main: "README",
-      source_ref: System.cmd("git rev-parse --verify --quiet HEAD") ]
+      source_ref: System.cmd("git rev-parse", ["--verify", "--quiet", "HEAD"]) ]
   end
 end
