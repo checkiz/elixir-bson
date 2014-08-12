@@ -1,3 +1,11 @@
+defmodule BsonDecodeError do
+  defexception [:message, :at]
+
+  def message(m) do
+    inspect(m)
+  end
+end
+
 defprotocol BsonDecoder do
   @moduledoc """
   Similarly to `BsonEncoder`, this protocol defines decoding of chunks of Bson document.

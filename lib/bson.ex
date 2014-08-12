@@ -82,7 +82,7 @@ defmodule Bson do
   defmodule Regex do
     defstruct pattern: "", opts: ""
     @moduledoc """
-    Represents a Regex 
+    Represents a Regex
 
     * `:pattern` - a bynary that is the regex pattern
     * `:opts` - a bianry that contains the regex options string identified by characters, which must be stored in alphabetical order. Valid options are 'i' for case insensitive matching, 'm' for multiline matching, 'x' for verbose mode, 'l' to make \w, \W, etc. locale dependent, 's' for dotall mode ('.' matches everything), and 'u' to make \w, \W, etc. match unicode
@@ -91,7 +91,7 @@ defmodule Bson do
   defmodule JS do
     defstruct code: "", scope: nil
     @moduledoc """
-    Represents a Javascript function and optionally its scope 
+    Represents a Javascript function and optionally its scope
 
     * `:code` - a bynary that is the function code
     * `:scope` - a Map representing a bson document, the scope of the function
@@ -173,7 +173,7 @@ defmodule Bson do
   Returns tokens of the Bson document (no decoding)
   """
   def tokenize(bson) do
-    sizebson = size(bson)
+    sizebson = byte_size(bson)
     cond do
       sizebson < 5 ->
         raise Not_a_valid_bson,
@@ -196,22 +196,22 @@ defmodule Bson do
   @doc """
   Formats a bson document using the document strings (add size and trailing null character)
   """
-  def doc(s),     do: int32(size(s)+5) <> s <> "\x00"
+  def doc(s),     do: int32(byte_size(s)+5) <> s <> "\x00"
 
   @doc """
   Formats a bson string using the document strings (add size and trailing null character)
   """
-  def string(s),  do: int32(size(s)+1) <> s <> "\x00"
+  def string(s),  do: int32(byte_size(s)+1) <> s <> "\x00"
 
   @doc """
   Formats a integer in a int32 binary
   """
-  def int32(i),   do: <<(i)::[size(32),signed,little]>>
+  def int32(i),   do: <<(i)::size(32)-signed-little>>
 
   @doc """
   Formats a integer in a int64 binary
   """
-  def int64(i),   do: <<(i)::[size(64),signed,little]>>
+  def int64(i),   do: <<(i)::size(64)-signed-little>>
 
   @doc """
   Formats true or false
@@ -228,7 +228,7 @@ defmodule Bson do
   """
   def int32(bson, from) do
     at  = from*8
-    <<_::[size(at)], i::[size(32),signed,little], _::binary>> = bson
+    <<_::size(at), i::size(32)-signed-little, _::binary>> = bson
     i
   end
 
@@ -237,9 +237,9 @@ defmodule Bson do
   """
   def int64(bson, from) do
     at  = from*8
-    <<_::[size(at)], i::[size(64),signed,little], _::binary>> = bson
+    <<_::size(at), i::size(64)-signed-little, _::binary>> = bson
     i
-  end
+  end 
 
   @doc """
   Decodes a float from a binary at a given position. It will decode atoms nan, +inf and -inf as floats
@@ -250,7 +250,7 @@ defmodule Bson do
       <<0, 0, 0, 0, 0, 0, 248, 255>> -> :nan
       <<0, 0, 0, 0, 0, 0, 240, 127>> -> :'+inf'
       <<0, 0, 0, 0, 0, 0, 240, 255>> -> :'-inf'
-      <<f::[size(64),float,little]>> -> f
+      <<f::size(64)-float-little>> -> f
     end
   end
 

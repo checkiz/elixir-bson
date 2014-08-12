@@ -61,7 +61,7 @@ defmodule BsonTk do
     """
   end
   defmodule Bin do
-    defstruct part: nil, subtype: nil 
+    defstruct part: nil, subtype: nil
     @moduledoc """
     Token for Binary data
     """
@@ -160,7 +160,7 @@ defmodule BsonTk do
 
   # regex
   def tokenize_element("\x0b", bson, from) do
-    to = size(bson) -1
+    to = byte_size(bson) -1
     patternend = Bson.peek_cstring_end(bson, from, to)
     optsend = Bson.peek_cstring_end(bson, patternend+1, to)
     {%BsonTk.Regex{pattern: {from, patternend-from}, opts: {patternend+1, optsend-(patternend+1)}}, optsend+1}

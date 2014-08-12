@@ -1,4 +1,5 @@
 defprotocol BsonEncoder do
+  @fallback_to_any true
   @moduledoc """
   `BsonEncoder` protocol defines Bson encoding according to Elixir types or Bson specific struct (see `Bson`).
 
@@ -7,8 +8,8 @@ defprotocol BsonEncoder do
   * `Map` - Encodes a map into a document
   * `Integer` - Encodes integer in 32 or 64 bits
   * `Float` - Encodes float in 64 bits
-  * `Atom` - Encodes special atom (`false`, `true`, `nil`, 
-  `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format 
+  * `Atom` - Encodes special atom (`false`, `true`, `nil`,
+  `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format
   others in special type Symbol
   * `Tuple` - Encodes the return of `now/1`
   * `BitString` - as binary string
@@ -42,7 +43,7 @@ end
 defimpl BsonEncoder, for: Float do
   def encode(f, name), do: "\x01" <> name <> "\x00" <> float(f)
 
-  defp float(f),   do: <<(f)::[size(64),float,little]>>
+  defp float(f),   do: <<(f)::size(64)-float-little>>
 end
 
 defimpl BsonEncoder, for: Atom do
@@ -78,11 +79,11 @@ defimpl BsonEncoder, for: Bson.JS do
     "\x0f" <> name <> "\x00" <> js_ctx(Bson.string(js) <> BsonEncoder.Map.encode_e_list(ctx))
   end
 
-  defp js_ctx(jsctx), do: Bson.int32(size(jsctx)+4) <> jsctx
+  defp js_ctx(jsctx), do: Bson.int32(byte_size(jsctx)+4) <> jsctx
 end
 
 defimpl BsonEncoder, for: Bson.Bin do
-  def encode(%Bson.Bin{bin: bin, subtype: subtype}, name), do:  "\x05" <> name <> "\x00" <> Bson.int32(size(bin)) <> subtype <> bin
+  def encode(%Bson.Bin{bin: bin, subtype: subtype}, name), do:  "\x05" <> name <> "\x00" <> Bson.int32(byte_size(bin)) <> subtype <> bin
 end
 
 defimpl BsonEncoder, for: Bson.Timestamp do
@@ -100,7 +101,7 @@ defimpl BsonEncoder, for: Tuple do
     "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
   end
   def encode(t, name) do
-    raise Error, message: "cannot encode tuple of size " <> to_string(size(t)) <> " (" <> name <> ")"
+    raise BsonEncoder.Tuple.Error, message: "cannot encode tuple of size  #{to_string(tuple_size(t))} ( #{name} )"
   end
 end
 
@@ -133,7 +134,7 @@ defimpl BsonEncoder, for: Map do
   end
 
   def encode_e_list(map) do
-    :maps.fold( fn 
+    :maps.fold( fn
       k, v, acc when is_atom(k) -> [BsonEncoder.encode(v, k |> Atom.to_string)|acc]
       k, v, acc -> [BsonEncoder.encode(v, Bson.encode(k))|acc]
     end, [], map)
@@ -144,3 +145,8 @@ defimpl BsonEncoder, for: Map do
 
 end
 
+defimpl BsonEncoder, for: Any do
+  def encode(%{__struct__: _struct}=map, name) do
+    "\x03" <> name <> "\x00" <> BsonEncoder.Map.encode_e_list(map)
+  end
+end

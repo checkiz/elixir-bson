@@ -190,6 +190,6 @@ defmodule Bson.Test do
   end
 
   test "invalid tuple" do
-    assert_raise BsonEncoder.Tuple.Error,  fn ->  Bson.encode([{:b, 2, 3}]) end
+    assert_raise BsonEncoder.Tuple.Error,  fn ->  Bson.encode(%{badtuple: {:b, 2, 3}}) end
   end
 end
