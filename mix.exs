@@ -20,14 +20,17 @@ defmodule Bson.Mixfile do
 
   # Returns the list of dependencies in the format:
   defp deps(:docs) do
-    [{ :ex_doc, github: "elixir-lang/ex_doc" }]
+    [
+      {:ex_doc, ">= 0.0.0" },
+      {:earmark, ">= 0.0.0"}
+    ]
   end
   defp deps(_), do: []
 
   defp docs do
-    [ readme: true,
-      main: "README",
-      source_ref: System.cmd("git rev-parse", ["--verify", "--quiet", "HEAD"]) ]
+    [ #readme: true,
+      #main: "README",
+      source_ref: System.cmd("git", ["rev-parse", "--verify", "--quiet", "HEAD"])|>elem(0) ]
   end
 
   defp package do
