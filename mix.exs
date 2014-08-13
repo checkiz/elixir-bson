@@ -27,7 +27,7 @@ defmodule Bson.Mixfile do
   defp docs do
     [ readme: true,
       main: "README",
-      source_ref: System.cmd("git rev-parse --verify --quiet HEAD") ]
+      source_ref: System.cmd("git rev-parse", ["--verify", "--quiet", "HEAD"]) ]
   end
 
   defp package do
