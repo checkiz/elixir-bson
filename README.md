@@ -1,9 +1,10 @@
 elixir-bson
 ===========
+[![Build Status](https://travis-ci.org/checkiz/elixir-bson.png?branch=master)](https://travis-ci.org/checkiz/elixir-bson)
 
 BSON implementation for Elixir Language
 
-elixir-bson on GitHub [source repo](https://github.com/checkiz/elixir-bson) - 
+elixir-bson on GitHub [source repo](https://github.com/checkiz/elixir-bson) -
 [documentation](https://checkiz.github.io/elixir-bson)
 
 
