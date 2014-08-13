@@ -20,17 +20,14 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonTk.html">BsonTk</a></div>
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonTk.html">BsonTk</a></div>
 
       <h1>
         BsonTk
         
       </h1>
 
-      
-
       <ul class="summary_links">
-        
         
           <li><a href="#summary">Summary</a></li>
         
@@ -44,18 +41,15 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p><a href="BsonTk.html"><code>BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code>Bson</code></a></p>
-
+          <p><a href="BsonTk.html"><code class="inline">BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code class="inline">Bson</code></a></p>
 <p>Before being decoded bson documents are tokenized, this means cut into chunks that are easy to decode.</p>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_tokenizer.ex#L1" target="_blank" class="view_source">Source</a>
-      
-
+        <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_tokenizer.ex#L1" class="view_source">Source</a>
       
 
       
@@ -64,7 +58,7 @@
           <tr>
   <td class="summary_signature"><a href="#tokenize/3">tokenize(bson, from, to)</a></td>
   
-    <td class="summary_synopsis"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code>from</code></p>
+    <td class="summary_synopsis"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code class="inline">from</code></p>
 </td>
   
 </tr>
@@ -78,9 +72,9 @@
 <tr>
   <td class="summary_signature"><a href="#tokenize_element/3">tokenize_element(tag, bson, from)</a></td>
   
-    <td class="summary_synopsis"><p>tokenize one element value of bson starting at position <code>from</code>.
+    <td class="summary_synopsis"><p>tokenize one element value of bson starting at position <code class="inline">from</code>.
 Based on the tag in front of an element of a Bson document (see e_list in specs),
-it identifies the element type and created the appropriate BsonTk record</p>
+it identifies the element type and created the appropriate BsonTk struct</p>
 </td>
   
 </tr>
@@ -103,19 +97,20 @@ it identifies the element type and created the appropriate BsonTk record</p>
     </div>
   </div>
   
-  <div class="docstring"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code>from</code>.</p>
-
-<p>It returns {{<code>tk_name</code>, <code>tk_element</code>}, <code>tk_end</code>} where:</p>
-
+  <div class="docstring"><p>tokenize one element, this is a key-value pair, of a bson document starting at position <code class="inline">from</code>.</p>
+<p>It returns {{<code class="inline">tk_name</code>, <code class="inline">tk_element</code>}, <code class="inline">tk_end</code>} where:</p>
 <ul>
-<li><code>tk_name</code> - is the token of the element name (binary part {from, to})</li>
-<li><code>tk_element</code> - is the token of the element value (see <a href="#tokenize_element/3"><code>tokenize_element/3</code></a>)</li>
-<li><code>tk_end</code> - is the end position of the element</li>
+<li><code class="inline">tk_name</code> - is the token of the element name (binary part {from, to})
+</li>
+<li><code class="inline">tk_element</code> - is the token of the element value (see <a href="#tokenize_element/3"><code class="inline">tokenize_element/3</code></a>)
+</li>
+<li><code class="inline">tk_end</code> - is the end position of the element
+</li>
 </ul>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_tokenizer.ex#L90" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_tokenizer.ex#L104" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -131,8 +126,8 @@ it identifies the element type and created the appropriate BsonTk record</p>
   <div class="docstring"><p>Tokenize elements of a bson document (e_list in the spec)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_tokenizer.ex#L180" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_tokenizer.ex#L193" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -145,23 +140,23 @@ it identifies the element type and created the appropriate BsonTk record</p>
     </div>
   </div>
   
-  <div class="docstring"><p>tokenize one element value of bson starting at position <code>from</code>.
+  <div class="docstring"><p>tokenize one element value of bson starting at position <code class="inline">from</code>.
 Based on the tag in front of an element of a Bson document (see e_list in specs),
-it identifies the element type and created the appropriate BsonTk record.</p>
-
-<p>It returns {<code>tk_element</code>, <code>tk_end</code>} where:</p>
-
+it identifies the element type and created the appropriate BsonTk struct.</p>
+<p>It returns {<code class="inline">tk_element</code>, <code class="inline">tk_end</code>} where:</p>
 <ul>
-<li><code>tk_element</code> - is the token of the element value. It can be an atom <code>nil</code>, <code>MIN_KEY</code>, <code>MAX_KEY</code>
-or a record
-(<code>BsonTk.Int32</code>, <code>BsonTk.Int64</code>, <a href="BsonTk.Float.html"><code>BsonTk.Float</code></a>, <a href="BsonTk.Doc.html"><code>BsonTk.Doc</code></a>, <a href="BsonTk.Array.html"><code>BsonTk.Array</code></a>, <a href="BsonTk.String.html"><code>BsonTk.String</code></a>, <a href="BsonTk.Atom.html"><code>BsonTk.Atom</code></a>,
-<a href="BsonTk.Bool.html"><code>BsonTk.Bool</code></a>, <a href="BsonTk.ObjectId.html"><code>BsonTk.ObjectId</code></a>, <a href="BsonTk.Bin.html"><code>BsonTk.Bin</code></a>, <a href="BsonTk.Regex.html"><code>BsonTk.Regex</code></a>, <a href="BsonTk.JS.html"><code>BsonTk.JS</code></a>, <a href="BsonTk.Now.html"><code>BsonTk.Now</code></a>, <a href="BsonTk.Timestamp.html"><code>BsonTk.Timestamp</code></a>)</li>
-<li><code>tk_end</code> - is the end position of the element</li>
+<li><code class="inline">tk_element</code> - is the token of the element value. It can be an atom <code class="inline">nil</code>, <code class="inline">MIN_KEY</code>, <code class="inline">MAX_KEY</code>
+or a struct
+(<code class="inline">BsonTk.Int32</code>, <code class="inline">BsonTk.Int64</code>, <a href="BsonTk.Float.html"><code class="inline">BsonTk.Float</code></a>, <a href="BsonTk.Doc.html"><code class="inline">BsonTk.Doc</code></a>, <a href="BsonTk.Array.html"><code class="inline">BsonTk.Array</code></a>, <a href="BsonTk.String.html"><code class="inline">BsonTk.String</code></a>, <a href="BsonTk.Atom.html"><code class="inline">BsonTk.Atom</code></a>,
+<a href="BsonTk.Bool.html"><code class="inline">BsonTk.Bool</code></a>, <a href="BsonTk.ObjectId.html"><code class="inline">BsonTk.ObjectId</code></a>, <a href="BsonTk.Bin.html"><code class="inline">BsonTk.Bin</code></a>, <a href="BsonTk.Regex.html"><code class="inline">BsonTk.Regex</code></a>, <a href="BsonTk.JS.html"><code class="inline">BsonTk.JS</code></a>, <a href="BsonTk.Now.html"><code class="inline">BsonTk.Now</code></a>, <a href="BsonTk.Timestamp.html"><code class="inline">BsonTk.Timestamp</code></a>)
+</li>
+<li><code class="inline">tk_end</code> - is the end position of the element
+</li>
 </ul>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_tokenizer.ex#L111" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_tokenizer.ex#L125" class="view_source">Source</a>
   
 </div>
 

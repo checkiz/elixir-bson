@@ -20,17 +20,14 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a></div>
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a></div>
 
       <h1>
         Bson
         
       </h1>
 
-      
-
       <ul class="summary_links">
-        
         
           <li><a href="#summary">Summary</a></li>
         
@@ -44,61 +41,68 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p><a href="Bson.html"><code>Bson</code></a> provides encoding and decoding function for Bson format
+          <p><a href="Bson.html"><code class="inline">Bson</code></a> provides encoding and decoding function for Bson format
 see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
-
 <p>Usage:</p>
-
 <pre><code class="elixir">term = %{
-    a:  -4.230845,
-    b:  &quot;hello&quot;,
-    c:  %{x: -1, y: 2.2001},
-    d:  [23, 45, 200],
-    eeeeeeeee:  Bson.Bin[ subtype: Bson.Bin.subtyx(Binary),
-                  bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;],
-    f:  Bson.Bin[ subtype: Bson.Bin.subtyx(Function),
-                  bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;],
-    g:  Bson.Bin[ subtype: Bson.Bin.subtyx(UUID),
-                  bin:  &lt;&lt;49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0,
-                          2, 48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109,
-                          101, 0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64,
-                          16, 50, 0, 194, 7, 0, 0, 0, 0&gt;&gt;],
-    h:  Bson.Bin[ subtype: Bson.Bin.subtyx(MD5),
-                  bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;],
-    i:  Bson.Bin[ subtype: Bson.Bin.subtyx(User),
-                  bin:  &lt;&lt;49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0, 2,
-                          48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109, 101,
-                          0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64, 16, 50,
-                          0, 194, 7, 0, 0, 0, 0&gt;&gt;],
-    j:  Bson.ObjectId[oid: &lt;&lt;82, 224, 229, 161, 0, 0, 2, 0, 3, 0, 0, 4&gt;&gt;],
-    k1: false,
-    k2: true,
-    l:  {1390, 470561, 277000},
-    m:  nil,
-    n:  Bson.Regex[pattern: &quot;p&quot;, opts: &quot;o&quot;],
-    o1: Bson.JS[code: &quot;function(x) = x + 1;&quot;],
-    o2: Bson.JS[scope: %{x: 0, y: &quot;foo&quot;}, code: &quot;function(a) = a + x&quot;],
-    p:  :atom,
-    q1: -2000444000,
-    q2: -8000111000222001,
-    r:  Bson.Timestamp[inc: 1, ts: 2],
-    s1: MIN_KEY,
-    s2: MAX_KEY
-  }
-bson = Bson.encode(term)
-term = Bson.decode(bson)
-</code></pre>
+      a:  -4.230845,
+      b:  &quot;hello&quot;,
+      c:  %{x: -1, y: 2.2001},
+      d:  [23, 45, 200],
+      eeeeeeeee:  %Bson.Bin{ subtype: Bson.Bin.subtyx(Binary),
+                    bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;},
+      f:  %Bson.Bin{ subtype: Bson.Bin.subtyx(Function),
+                    bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;},
+      g:  %Bson.Bin{ subtype: Bson.Bin.subtyx(UUID),
+                    bin:  &lt;&lt;49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0,
+                            2, 48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109,
+                            101, 0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64,
+                            16, 50, 0, 194, 7, 0, 0, 0, 0&gt;&gt;},
+      h:  %Bson.Bin{ subtype: Bson.Bin.subtyx(MD5),
+                    bin:  &lt;&lt;200, 12, 240, 129, 100, 90, 56, 198, 34, 0, 0&gt;&gt;},
+      i:  %Bson.Bin{ subtype: Bson.Bin.subtyx(User),
+                    bin:  &lt;&lt;49, 0, 0, 0, 4, 66, 83, 79, 78, 0, 38, 0, 0, 0, 2,
+                            48, 0, 8, 0, 0, 0, 97, 119, 101, 115, 111, 109, 101,
+                            0, 1, 49, 0, 51, 51, 51, 51, 51, 51, 20, 64, 16, 50,
+                            0, 194, 7, 0, 0, 0, 0&gt;&gt;},
+      j:  %Bson.ObjectId{oid: &lt;&lt;82, 224, 229, 161, 0, 0, 2, 0, 3, 0, 0, 4&gt;&gt;},
+      k1: false,
+      k2: true,
+      l:  {1390, 470561, 277000},
+      m:  nil,
+      n:  %Bson.Regex{pattern: &quot;p&quot;, opts: &quot;o&quot;},
+      o1: %Bson.JS{code: &quot;function(x) = x + 1;&quot;},
+      o2: %Bson.JS{scope: %{x: 0, y: &quot;foo&quot;}, code: &quot;function(a) = a + x&quot;},
+      p:  :atom,
+      q1: -2000444000,
+      q2: -8000111000222001,
+      r:  %Bson.Timestamp{inc: 1, ts: 2},
+      s1: MIN_KEY,
+      s2: MAX_KEY
+    }
+  bson =
+  &lt;&lt;188,1,0,0,1,97,0,206,199,181,161,98,236,16,192,2,98,0,6,0,0,0,104,101,108,108,111,0,3,99,0,23,0,0,0,16,120,0,255,
+  255,255,255,1,121,0,210,111,95,7,206,153,1,64,0,4,100,0,26,0,0,0,16,48,0,23,0,0,0,16,49,0,45,0,0,0,16,50,0,200,0,
+  0,0,0,5,101,101,101,101,101,101,101,101,101,0,11,0,0,0,0,200,12,240,129,100,90,56,198,34,0,0,5,102,0,11,0,0,0,1,
+  200,12,240,129,100,90,56,198,34,0,0,5,103,0,49,0,0,0,4,49,0,0,0,4,66,83,79,78,0,38,0,0,0,2,48,0,8,0,0,0,97,119,101,
+  115,111,109,101,0,1,49,0,51,51,51,51,51,51,20,64,16,50,0,194,7,0,0,0,0,5,104,0,11,0,0,0,5,200,12,240,129,100,90,56,
+  198,34,0,0,5,105,0,49,0,0,0,128,49,0,0,0,4,66,83,79,78,0,38,0,0,0,2,48,0,8,0,0,0,97,119,101,115,111,109,101,0,1,49,
+  0,51,51,51,51,51,51,20,64,16,50,0,194,7,0,0,0,0,7,106,0,82,224,229,161,0,0,2,0,3,0,0,4,8,107,49,0,0,8,107,50,0,1,9,
+  108,0,253,253,128,190,67,1,0,0,10,109,0,11,110,0,112,0,111,0,13,111,49,0,21,0,0,0,102,117,110,99,116,105,111,110,40,
+  120,41,32,61,32,120,32,43,32,49,59,0,15,111,50,0,51,0,0,0,20,0,0,0,102,117,110,99,116,105,111,110,40,97,41,32,61,32,
+  97,32,43,32,120,0,23,0,0,0,16,120,0,0,0,0,0,2,121,0,4,0,0,0,102,111,111,0,0,14,112,0,5,0,0,0,97,116,111,109,0,16,113,
+  49,0,160,165,195,136,18,113,50,0,207,6,171,1,241,147,227,255,17,114,0,1,0,0,0,2,0,0,0,255,115,49,0,127,115,50,0,0&gt;&gt;
 
-<p>see <a href="#encode/1"><code>encode/1</code></a> and <a href="#decode/1"><code>decode/1</code></a></p>
+  assert Bson.encode(term) == bson
+  assert term == Bson.decode(bson)</code></pre>
+<p>see <a href="#encode/1"><code class="inline">encode/1</code></a> and <a href="#decode/1"><code class="inline">decode/1</code></a></p>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L1" target="_blank" class="view_source">Source</a>
-      
-
+        <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L1" class="view_source">Source</a>
       
 
       
@@ -121,7 +125,7 @@ term = Bson.decode(bson)
 <tr>
   <td class="summary_signature"><a href="#decode/2">decode(part, bson)</a></td>
   
-    <td class="summary_synopsis"><p>Same as <a href="#decode/1"><code>decode/1</code></a> but will start at a given postion in the binary</p>
+    <td class="summary_synopsis"><p>Same as <a href="#decode/1"><code class="inline">decode/1</code></a> but will start at a given postion in the binary</p>
 </td>
   
 </tr>
@@ -212,7 +216,7 @@ term = Bson.decode(bson)
 <tr>
   <td class="summary_signature"><a href="#tokenize/2">tokenize(arg1, bson)</a></td>
   
-    <td class="summary_synopsis"><p>Same as <a href="#tokenize/1"><code>tokenize/1</code></a> but will start at a given postion in the binary</p>
+    <td class="summary_synopsis"><p>Same as <a href="#tokenize/1"><code class="inline">tokenize/1</code></a> but will start at a given postion in the binary</p>
 </td>
   
 </tr>
@@ -238,8 +242,8 @@ term = Bson.decode(bson)
   <div class="docstring"><p>Formats true or false</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L210" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L219" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -253,12 +257,11 @@ term = Bson.decode(bson)
   </div>
   
   <div class="docstring"><p>Returns a decoded term from a Bson binary</p>
-
-<p>see protocol <a href="BsonDecoder.html"><code>BsonDecoder</code></a></p>
+<p>see protocol <a href="BsonDecoder.html"><code class="inline">BsonDecoder</code></a></p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L157" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L166" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -271,11 +274,11 @@ term = Bson.decode(bson)
     </div>
   </div>
   
-  <div class="docstring"><p>Same as <a href="#decode/1"><code>decode/1</code></a> but will start at a given postion in the binary</p>
+  <div class="docstring"><p>Same as <a href="#decode/1"><code class="inline">decode/1</code></a> but will start at a given postion in the binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L161" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L170" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -291,8 +294,8 @@ term = Bson.decode(bson)
   <div class="docstring"><p>Decodes a key-value pair (one element of a document)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L259" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L268" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -308,8 +311,8 @@ term = Bson.decode(bson)
   <div class="docstring"><p>Decodes one array item. Here the name token is not decoded, it contains the position of the item in the list.</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L267" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L276" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -325,8 +328,8 @@ term = Bson.decode(bson)
   <div class="docstring"><p>Formats a bson document using the document strings (add size and trailing null character)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L190" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L199" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -340,19 +343,15 @@ term = Bson.decode(bson)
   </div>
   
   <div class="docstring"><p>Returns a binary representing a Bson document.</p>
-
 <p>It accepts a Map and returns a binary</p>
-
 <pre><code class="elixir">Bson.encode({}) == &lt;&lt;5, 0, 0, 0, 0&gt;&gt;
 Bson.encode(a: 1) == &lt;&lt;12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0&gt;&gt;
-Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0&gt;&gt;
-</code></pre>
-
-<p>It delegates this job to protocol <a href="BsonEncoder.html"><code>BsonEncoder</code></a></p>
+Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0&gt;&gt;</code></pre>
+<p>It delegates this job to protocol <a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a></p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L147" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L156" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -368,8 +367,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Decodes a float from a binary at a given position. It will decode atoms nan, +inf and -inf as floats</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L238" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L247" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -385,8 +384,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Formats a integer in a int32 binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L200" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L209" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -402,8 +401,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Decodes an integer (int32) from a binary at a given position</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L220" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L229" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -419,8 +418,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Formats a integer in a int64 binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L205" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L214" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -436,8 +435,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Decodes an integer (int64) from a binary at a given position</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L229" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L238" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -453,8 +452,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Peeks for the end of a cstring</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L251" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L260" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -470,8 +469,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Formats a bson string using the document strings (add size and trailing null character)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L195" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L204" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -487,8 +486,8 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
   <div class="docstring"><p>Returns tokens of the Bson document (no decoding)</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L166" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L175" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -501,11 +500,11 @@ Bson.encode(a: 2, b: 2) == &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0
     </div>
   </div>
   
-  <div class="docstring"><p>Same as <a href="#tokenize/1"><code>tokenize/1</code></a> but will start at a given postion in the binary</p>
+  <div class="docstring"><p>Same as <a href="#tokenize/1"><code class="inline">tokenize/1</code></a> but will start at a given postion in the binary</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson.ex#L185" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson.ex#L194" class="view_source">Source</a>
   
 </div>
 

@@ -20,7 +20,7 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonDecoder.html">BsonDecoder</a></div>
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonDecoder.html">BsonDecoder</a></div>
 
       <h1>
         BsonDecoder
@@ -29,10 +29,7 @@
         
       </h1>
 
-      
-
       <ul class="summary_links">
-        
         
           <li><a href="#summary">Summary</a></li>
         
@@ -48,19 +45,16 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p>Similarly to <a href="BsonEncoder.html"><code>BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
+          <p>Similarly to <a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
 Chunks are identified by tokens and isolate an element of a Bson document.</p>
-
-<p>There is one implementation of the protocol for every record defined in <a href="BsonTk.html"><code>BsonTk</code></a></p>
+<p>There is one implementation of the protocol for every struct defined in <a href="BsonTk.html"><code class="inline">BsonTk</code></a></p>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
-      
-
+        <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_decoder.ex#L9" class="view_source">Source</a>
       
 
       
@@ -71,14 +65,6 @@ Chunks are identified by tokens and isolate an element of a Bson document.</p>
   
     <td class="summary_synopsis"><p>Returns a elixir term decoded from a chunk of a Bson document</p>
 </td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="#impl_for!/1">impl_for!(data)</a></td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="#impl_for/1">impl_for(arg)</a></td>
   
 </tr>
 
@@ -114,54 +100,8 @@ Chunks are identified by tokens and isolate an element of a Bson document.</p>
   <div class="docstring"><p>Returns a elixir term decoded from a chunk of a Bson document.</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_decoder.ex#L14" target="_blank" class="view_source">Source</a>
-  
-</div>
-<div class="detail">
-  <div class="detail_header" id="impl_for/1">
-    <span class="signature"><strong>impl_for(arg)</strong></span>
-    <div class="detail_header_links">
-      <span class="detail_type">(function)</span>
-      <a href="#impl_for/1" class="detail_link" title="Link to this function">#</a>
-      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
-    </div>
-  </div>
-  
-    <p>Specs:</p>
-    <ul class="spec">
-      
-        <li>impl_for(term) :: module | nil</li>
-      
-    </ul>
-  
-  <div class="docstring"></div>
-  
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
-  
-</div>
-<div class="detail">
-  <div class="detail_header" id="impl_for!/1">
-    <span class="signature"><strong>impl_for!(data)</strong></span>
-    <div class="detail_header_links">
-      <span class="detail_type">(function)</span>
-      <a href="#impl_for!/1" class="detail_link" title="Link to this function">#</a>
-      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
-    </div>
-  </div>
-  
-    <p>Specs:</p>
-    <ul class="spec">
-      
-        <li>impl_for!(term) :: module | no_return</li>
-      
-    </ul>
-  
-  <div class="docstring"></div>
-  
-    <a href="https://github.com/checkiz/elixir-bson/blob/cbdef11dbfa4dcd315c14f9fbdef92376e65b02e
-/lib/bson_decoder.ex#L1" target="_blank" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
+/lib/bson_decoder.ex#L22" class="view_source">Source</a>
   
 </div>
 

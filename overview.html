@@ -20,16 +20,16 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.2.0 &rarr; <a href="overview.html">Overview</a></div>
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a></div>
 
-      <h1>bson v0.2.0</h1>
+      <h1>bson v0.3.1</h1>
 
       <ul class="summary_links">
         
           <li><a href="#modules_summary">Modules</a></li>
         
         
-          <li><a href="#records_summary">Records</a></li>
+          <li><a href="#exceptions_summary">Exceptions</a></li>
         
         
           <li><a href="#protocols_summary">Protocols</a></li>
@@ -42,33 +42,12 @@
           <tr>
   <td class="summary_signature"><a href="Bson.html">Bson</a></td>
   
-    <td class="summary_synopsis"><p><a href="Bson.html"><code>Bson</code></a> provides encoding and decoding function for Bson format
+    <td class="summary_synopsis"><p><a href="Bson.html"><code class="inline">Bson</code></a> provides encoding and decoding function for Bson format
 see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
 </td>
   
 </tr>
 <tr>
-  <td class="summary_signature"><a href="BsonJson.html">BsonJson</a></td>
-  
-    <td class="summary_synopsis"><p>Converts a Bson document into a JSON document</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.html">BsonTk</a></td>
-  
-    <td class="summary_synopsis"><p><a href="BsonTk.html"><code>BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code>Bson</code></a></p>
-</td>
-  
-</tr>
-
-        </table>
-      
-
-      
-        <h2 id="records_summary">Records summary <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
-        <table class="summary">
-          <tr>
   <td class="summary_signature"><a href="Bson.Bin.html">Bson.Bin</a></td>
   
     <td class="summary_synopsis"><p>Represents Binary data</p>
@@ -104,9 +83,16 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
   
 </tr>
 <tr>
-  <td class="summary_signature"><a href="BsonEncoder.Tuple.Error.html">BsonEncoder.Tuple.Error</a></td>
+  <td class="summary_signature"><a href="BsonJson.html">BsonJson</a></td>
   
-    <td class="summary_synopsis"><p>Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0</p>
+    <td class="summary_synopsis"><p>Converts a Bson document into a JSON document</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="BsonTk.html">BsonTk</a></td>
+  
+    <td class="summary_synopsis"><p><a href="BsonTk.html"><code class="inline">BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code class="inline">Bson</code></a></p>
 </td>
   
 </tr>
@@ -213,12 +199,30 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
       
 
       
+        <h2 id="exceptions_summary">Exceptions summary <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="BsonDecodeError.html">BsonDecodeError</a></td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="BsonEncoder.Tuple.Error.html">BsonEncoder.Tuple.Error</a></td>
+  
+    <td class="summary_synopsis"><p>Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0</p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
         <h2 id="protocols_summary">Protocols summary <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
         <table class="summary">
           <tr>
   <td class="summary_signature"><a href="BsonDecoder.html">BsonDecoder</a></td>
   
-    <td class="summary_synopsis"><p>Similarly to <a href="BsonEncoder.html"><code>BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
+    <td class="summary_synopsis"><p>Similarly to <a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
 Chunks are identified by tokens and isolate an element of a Bson document</p>
 </td>
   
@@ -226,7 +230,7 @@ Chunks are identified by tokens and isolate an element of a Bson document</p>
 <tr>
   <td class="summary_signature"><a href="BsonEncoder.html">BsonEncoder</a></td>
   
-    <td class="summary_synopsis"><p><a href="BsonEncoder.html"><code>BsonEncoder</code></a> protocol defines Bson encoding according to Elixir types or Bson specific record (see <a href="Bson.html"><code>Bson</code></a>)</p>
+    <td class="summary_synopsis"><p><a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a> protocol defines Bson encoding according to Elixir types or Bson specific struct (see <a href="Bson.html"><code class="inline">Bson</code></a>)</p>
 </td>
   
 </tr>
