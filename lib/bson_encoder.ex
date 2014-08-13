@@ -133,6 +133,9 @@ defimpl BsonEncoder, for: Map do
     "\x03" <> name <> "\x00" <> encode_e_list(map)
   end
 
+  @doc """
+  encode e_list, this is, concatenation of encoded element
+  """
   def encode_e_list(map) do
     :maps.fold( fn
       k, v, acc when is_atom(k) -> [BsonEncoder.encode(v, k |> Atom.to_string)|acc]
