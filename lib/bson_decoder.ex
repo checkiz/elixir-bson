@@ -1,8 +1,11 @@
 defmodule BsonDecodeError do
-  defexception [:message, :at]
+  defexception [:msg, :at, :bson]
 
-  def message(m) do
-    inspect(m)
+  def message(err) do
+    case err.at do
+      at when is_integer(at) and at > 10-> "#{err.msg} at #{inspect(at)} of #{inspect(err.bson|>String.slice(10, 99))}"
+      at -> "#{err.msg} at #{inspect(at)} of #{inspect(err.bson)}"
+    end
   end
 end
 

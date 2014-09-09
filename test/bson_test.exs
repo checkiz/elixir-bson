@@ -3,6 +3,8 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule Bson.Test do
   use ExUnit.Case
 
+  doctest Bson
+
   test "Encoding elementary type" do
     assert Bson.encode([2]) == <<12, 0, 0, 0, 16, 48, 0, 2, 0, 0, 0, 0>>
     assert Bson.encode([-0x80000001]) == <<16, 0, 0, 0, 18, 48, 0, 255, 255, 255, 127, 255, 255, 255, 255, 0>>

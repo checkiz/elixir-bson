@@ -145,9 +145,13 @@ defmodule Bson do
   It accepts a Map and returns a binary
 
   ```elixir
-  Bson.encode({}) == <<5, 0, 0, 0, 0>>
-  Bson.encode(a: 1) == <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
-  Bson.encode(a: 2, b: 2) == <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
+    iex> Bson.encode(%{})
+    <<5, 0, 0, 0, 0>>
+    iex> Bson.encode(%{a: 1})
+    <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
+    iex> Bson.encode(%{a: 1, b: 2})
+    <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
+
   ```
 
   It delegates this job to protocol `BsonEncoder`
@@ -161,6 +165,16 @@ defmodule Bson do
   @doc """
   Returns a decoded term from a Bson binary
 
+
+  ```elixir
+    iex> %{} |> Bson.encode |> Bson.decode
+    %{}
+    iex> %{a: 1} |> Bson.encode |> Bson.decode
+    %{a: 1}
+    iex> %{a: 1, b: 2} |> Bson.encode |> Bson.decode
+    %{a: 1, b: 2}
+
+  ```
   see protocol `BsonDecoder`
   """
   def decode(bson), do: tokenize(bson) |> Enum.map(&decode_kv(&1, bson)) |> :maps.from_list
@@ -171,18 +185,33 @@ defmodule Bson do
 
   @doc """
   Returns tokens of the Bson document (no decoding)
+
+    iex> Bson.tokenize <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
+    [{{5, 1}, %BsonTk.Int32{part: {7, 4}}}]
+
+    iex> Bson.tokenize <<12, 0, 0>>
+    ** (BsonDecodeError) total length of bson document must be at least 5 at 0 of <<12, 0, 0>>
+
+    iex> Bson.tokenize <<12, 0, 0, 0, 0, 0>>
+    ** (BsonDecodeError) total length of bson document does not match document header at 0 of <<12, 0, 0, 0, 0, 0>>
+
+    iex> Bson.tokenize <<12, 0, 0, 0, 0, 97, 0, 1, 0, 0, 0, 0>>
+    ** (BsonDecodeError) Unknown element type 00 at 7 of <<12, 0, 0, 0, 0, 97, 0, 1, 0, 0, 0, 0>>
+
   """
   def tokenize(bson) do
     sizebson = byte_size(bson)
     cond do
       sizebson < 5 ->
-        raise Not_a_valid_bson,
+        raise BsonDecodeError,
           at: 0,
-          msg: "total length of bson document must be at least 5"
+          msg: "total length of bson document must be at least 5",
+          bson: bson
       sizebson != int32(bson, 0) ->
-        raise Not_a_valid_bson,
+        raise BsonDecodeError,
           at: 0,
-          msg: "total length of bson document does not match document header"
+          msg: "total length of bson document does not match document header",
+          bson: bson
       true ->
         BsonTk.tokenize_e_list(bson, 4, sizebson-1)
     end
@@ -239,7 +268,7 @@ defmodule Bson do
     at  = from*8
     <<_::size(at), i::size(64)-signed-little, _::binary>> = bson
     i
-  end 
+  end
 
   @doc """
   Decodes a float from a binary at a given position. It will decode atoms nan, +inf and -inf as floats
