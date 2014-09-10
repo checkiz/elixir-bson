@@ -10,7 +10,6 @@ defprotocol BsonEncoder do
   * `Atom` - Encodes special atom (`false`, `true`, `nil`,
   `:nan`, `:+inf`, `:-inf`, `MIN_KEY` and `MAX_KEY`) in appropriate format
   others in special type Symbol
-  * `Tuple` - Encodes the return of `now/1`
   * `BitString` - as binary string
   * `List` - Encodes a list as array
   * `Bson.Regex' - see specs
