@@ -78,12 +78,6 @@ defmodule BsonTk do
     Token for JavaScript code with or without scope
     """
   end
-  defmodule Now do
-    defstruct part: nil
-    @moduledoc """
-    Token for UTC datetime
-    """
-  end
   defmodule Timestamp do
     defstruct inc: nil, ts: nil
     @moduledoc """
@@ -127,7 +121,7 @@ defmodule BsonTk do
   defp tokenize_element(<<0x01>>, _, from), do: {%Float{part: {from, 8}}, from+8}
   defp tokenize_element(<<0x07>>, _, from), do: {%ObjectId{part: {from, 12}}, from+12}
   defp tokenize_element(<<0x08>>, _, from), do: {%Bool{part: {from, 1}}, from+1}
-  defp tokenize_element(<<0x09>>, _, from), do: {%Now{part: {from, 8}}, from+8}
+#  defp tokenize_element(<<0x09>>, _, from), do: {%Now{part: {from, 8}}, from+8}
   defp tokenize_element(<<0x06>>, _, from), do: {nil, from+0}
   defp tokenize_element(<<0x0a>>, _, from), do: {nil, from+0}
   defp tokenize_element(<<0x11>>, _, from), do: {%Timestamp{inc: {from, 4}, ts: {from+4, 4}}, from+8}

@@ -106,10 +106,3 @@ defimpl BsonDecoder, for: BsonTk.Timestamp do
     %Bson.Timestamp{inc: Bson.int32(bson, inc_from), ts: Bson.int32(bson, ts_from)}
   end
 end
-
-defimpl BsonDecoder, for: BsonTk.Now do
-  def decode(%BsonTk.Now{part: {from, _}}, bson) do
-    ms = Bson.int64(bson, from)
-    {div(ms, 1000000000), rem(div(ms, 1000), 1000000), rem(ms * 1000, 1000000)}
-  end
-end

@@ -88,21 +88,6 @@ defimpl BsonEncoder, for: Bson.Timestamp do
   def encode(%Bson.Timestamp{inc: i, ts: t}, name),        do:  <<0x11>> <> name <> <<0x00>> <> Bson.int32(i) <> Bson.int32(t)
 end
 
-defimpl BsonEncoder, for: Tuple do
-  defmodule Error do
-    defexception [:message]
-    @moduledoc """
-    Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0
-    """
-  end
-  def encode({a, s, o}, name) when is_integer(a) and is_integer(s) and is_integer(o) do
-    <<0x09>> <> name <> <<0x00>> <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
-  end
-  def encode(t, name) do
-    raise BsonEncoder.Tuple.Error, message: "cannot encode tuple of size  #{to_string(tuple_size(t))} ( #{name} )"
-  end
-end
-
 defimpl BsonEncoder, for: BitString do
   def encode(s, name) when is_binary(s),  do: <<0x02>> <> name <> <<0x00>> <> Bson.string(s)
 end
