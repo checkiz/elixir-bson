@@ -83,8 +83,10 @@ defimpl BsonDecoder, for: BsonTk.Bin do
 end
 
 defimpl BsonDecoder, for: BsonTk.Regex do
-  def decode(regex, bson) do
-    %Bson.Regex{pattern: :erlang.binary_part(bson, regex.pattern), opts: :erlang.binary_part(bson, regex.opts)}
+  def decode(regexToken, bson) do
+    case Regex.compile(:erlang.binary_part(bson, regexToken.pattern), :erlang.binary_part(bson, regexToken.opts)) do
+      {:ok, regex} -> regex
+    end
   end
 end
 

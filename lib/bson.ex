@@ -79,15 +79,6 @@ defmodule Bson do
         end |> String.downcase) <> ")"
       end
     end
-  defmodule Regex do
-    defstruct pattern: "", opts: ""
-    @moduledoc """
-    Represents a Regex
-
-    * `:pattern` - a bynary that is the regex pattern
-    * `:opts` - a bianry that contains the regex options string identified by characters, which must be stored in alphabetical order. Valid options are 'i' for case insensitive matching, 'm' for multiline matching, 'x' for verbose mode, 'l' to make \w, \W, etc. locale dependent, 's' for dotall mode ('.' matches everything), and 'u' to make \w, \W, etc. match unicode
-    """
-  end
   defmodule JS do
     defstruct code: "", scope: nil
     @moduledoc """

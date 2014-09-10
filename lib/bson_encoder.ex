@@ -59,10 +59,8 @@ defimpl BsonEncoder, for: Atom do
   def encode(atom, name),    do: "\x0e" <> name <> "\x00" <> Bson.string(Atom.to_string(atom))
 end
 
-defimpl BsonEncoder, for: Bson.Regex do
-  def encode(%Bson.Regex{pattern: p, opts: o}, name) when is_binary(p) and is_binary(o) do
-    "\x0b" <> name <> "\x00" <> p <> "\x00" <> o <> "\x00"
-  end
+defimpl BsonEncoder, for: Regex do
+  def encode(regex, name), do: <<0x0b>> <> name <> <<0x00>> <> regex.source <> <<0x00>> <> regex.opts <> <<0x00>>
 end
 
 defimpl BsonEncoder, for: Bson.ObjectId do
