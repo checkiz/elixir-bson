@@ -95,7 +95,7 @@ defmodule Bson do
     """
   end
   defmodule Bin do
-    defstruct bin: "", subtype: "\x00"
+    defstruct bin: "", subtype: <<0x00>>
     @moduledoc """
     Represents Binary data
     """
@@ -110,24 +110,24 @@ defmodule Bson do
     * `MD5` - MD5
     * `User` - User defined
     """
-    def subtyx(Binary),     do: "\x00"
-    def subtyx(Function),   do: "\x01"
-    def subtyx(Binary.Old), do: "\x02"
-    def subtyx(UUID.Old),   do: "\x03"
-    def subtyx(UUID),       do: "\x04"
-    def subtyx(MD5),        do: "\x05"
+    def subtyx(Binary),     do: <<0x00>>
+    def subtyx(Function),   do: <<0x01>>
+    def subtyx(Binary.Old), do: <<0x02>>
+    def subtyx(UUID.Old),   do: <<0x03>>
+    def subtyx(UUID),       do: <<0x04>>
+    def subtyx(MD5),        do: <<0x05>>
     def subtyx(User),       do: <<0x80>>
 
     @doc """
     Returns the atom coresponding to the subtype of the bynary data
     """
-    def xsubty("\x00"),     do: Binary
-    def xsubty("\x01"),     do: Function
-    def xsubty("\x02"),     do: Binary
-    def xsubty("\x03"),     do: UUID
-    def xsubty("\x04"),     do: UUID
-    def xsubty("\x05"),     do: MD5
-    def xsubty(<<0x80>>),   do: User
+    def xsubty(<<0x00>>),     do: Binary
+    def xsubty(<<0x01>>),     do: Function
+    def xsubty(<<0x02>>),     do: Binary
+    def xsubty(<<0x03>>),     do: UUID
+    def xsubty(<<0x04>>),     do: UUID
+    def xsubty(<<0x05>>),     do: MD5
+    def xsubty(<<0x80>>),     do: User
   end
 
   @doc """
@@ -216,12 +216,12 @@ defmodule Bson do
   @doc """
   Formats a bson document using the document strings (add size and trailing null character)
   """
-  def doc(s),     do: int32(byte_size(s)+5) <> s <> "\x00"
+  def doc(s),     do: <<(byte_size(s)+5)::32-signed-little, s::binary>> <> <<0x00>>
 
   @doc """
   Formats a bson string using the document strings (add size and trailing null character)
   """
-  def string(s),  do: int32(byte_size(s)+1) <> s <> "\x00"
+  def string(s),  do: int32(byte_size(s)+1) <> s <> <<0x00>>
 
   @doc """
   Formats a integer in a int32 binary
@@ -238,8 +238,8 @@ defmodule Bson do
   """
   def bool(bson, from) do
     case binary_part(bson, from, 1) do
-      "\x00" -> false
-      "\x01" -> true
+      <<0x00>> -> false
+      <<0x01>> -> true
     end
   end
 
@@ -278,7 +278,7 @@ defmodule Bson do
   Peeks for the end of a cstring
   """
   def peek_cstring_end(bson, from, to) do
-    {cstring_end, _} = :binary.match(bson, "\x00", [{:scope, {from, to-from+1}}])
+    {cstring_end, _} = :binary.match(bson, <<0x00>>, [{:scope, {from, to-from+1}}])
     cstring_end
   end
 
