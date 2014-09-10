@@ -1,5 +1,4 @@
 defprotocol BsonEncoder do
-  @fallback_to_any true
   @moduledoc """
   `BsonEncoder` protocol defines Bson encoding according to Elixir types or Bson specific struct (see `Bson`).
 
