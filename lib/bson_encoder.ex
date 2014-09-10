@@ -98,7 +98,7 @@ defimpl BsonEncoder, for: Tuple do
     """
   end
   def encode({a, s, o}, name) when is_integer(a) and is_integer(s) and is_integer(o) do
-    "\x09" <> name <> "\x00" <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
+    <<0x09>> <> name <> <<0x00>> <> Bson.int64(a * 1000000000 + s * 1000 + div(o, 1000))
   end
   def encode(t, name) do
     raise BsonEncoder.Tuple.Error, message: "cannot encode tuple of size  #{to_string(tuple_size(t))} ( #{name} )"
@@ -106,13 +106,13 @@ defimpl BsonEncoder, for: Tuple do
 end
 
 defimpl BsonEncoder, for: BitString do
-  def encode(s, name) when is_binary(s),  do: "\x02" <> name <> "\x00" <> Bson.string(s)
+  def encode(s, name) when is_binary(s),  do: <<0x02>> <> name <> <<0x00>> <> Bson.string(s)
 end
 
 defimpl BsonEncoder, for: List do
-  # def encode([], name),                  do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
+  # def encode([], name),                  do:  <<0x03>> <> name <> <<0x00>> <> Bson.doc(<<>>)
   def encode(array, name) when is_list(array) do
-    "\x04" <> name <> "\x00" <> encode_array(array)
+    <<0x04>> <> name <> <<0x00>> <> encode_array(array)
   end
 
   defp encode_array(arr) do
@@ -128,9 +128,9 @@ defimpl BsonEncoder, for: List do
 end
 
 defimpl BsonEncoder, for: Map do
-  # def encode(%{}, name),                  do:  "\x03" <> name <> "\x00" <> Bson.doc(<<>>)
+  # def encode(%{}, name),                  do:  <<0x03>> <> name <> <<0x00>> <> Bson.doc(<<>>)
   def encode(map, name) do
-    "\x03" <> name <> "\x00" <> encode_e_list(map)
+    <<0x03>> <> name <> <<0x00>> <> encode_e_list(map)
   end
 
   @doc """
@@ -150,6 +150,6 @@ end
 
 defimpl BsonEncoder, for: Any do
   def encode(%{__struct__: _struct}=map, name) do
-    "\x03" <> name <> "\x00" <> BsonEncoder.Map.encode_e_list(map)
+    <<0x03>> <> name <> <<0x00>> <> BsonEncoder.Map.encode_e_list(map)
   end
 end
