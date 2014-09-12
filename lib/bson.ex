@@ -84,6 +84,16 @@ defmodule Bson do
   end
 
   def hex(bin), do: (for <<h::4 <- bin>>, into: <<>>, do: <<Integer.to_string(h,16)::binary>>)
+
+  defmodule Regex do
+    defstruct pattern: "", opts: ""
+    @moduledoc """
+    Represents a Regex
+
+    * `:pattern` - a bynary that is the regex pattern
+    * `:opts` - a bianry that contains the regex options string identified by characters, which must be stored in alphabetical order. Valid options are 'i' for case insensitive matching, 'm' for multiline matching, 'x' for verbose mode, 'l' to make \w, \W, etc. locale dependent, 's' for dotall mode ('.' matches everything), and 'u' to make \w, \W, etc. match unicode
+    """
+  end
   defmodule JS do
     defstruct code: "", scope: nil
     @moduledoc """
@@ -98,6 +108,28 @@ defmodule Bson do
     @moduledoc """
     Represents the special internal type Timestamp used by MongoDB
     """
+  end
+  defmodule UTC do
+    defstruct ms: nil
+    @moduledoc """
+    Represent UTC datetime
+
+    * `:ms` - miliseconds
+    """
+    @doc """
+    Returns a struct `Bson.UTC` using a tuple given by `:erlang.now/0`
+
+    iex> Bson.UTC.from_now({1410, 473634, 449058})
+    %Bson.UTC{ms: 1410473634449}
+    """
+    def from_now({a, s, o}), do: %UTC{ms: a * 1000000000 + s * 1000 + div(o, 1000)}
+    @doc """
+    Returns a triplet tuple similar to the return value of `:erlang.now/0` using a struct `Bson.UTC`
+
+    iex> Bson.UTC.to_now(%Bson.UTC{ms: 1410473634449})
+    {1410, 473634, 449000}
+    """
+    def to_now(%UTC{ms: ms}), do: {div(ms, 1000000000), rem(div(ms, 1000), 1000000), rem(ms * 1000, 1000000)}
   end
   defmodule Bin do
     defstruct bin: "", subtype: <<0x00>>
