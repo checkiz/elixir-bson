@@ -1,6 +1,8 @@
 elixir-bson
 ===========
 [![Build Status](https://travis-ci.org/checkiz/elixir-bson.png?branch=master)](https://travis-ci.org/checkiz/elixir-bson)
+[![Hex Version](https://img.shields.io/hexpm/v/bson.svg)](https://hex.pm/packages/bson)
+[![Hex Downloads](https://img.shields.io/hexpm/dt/bson.svg)](https://hex.pm/packages/bson)
 
 BSON implementation for Elixir Language
 
