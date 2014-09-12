@@ -1,6 +1,8 @@
 # dev
 * prépartion pour elixir v1
 * Bson.Regex is obsolete and replaced with Regex
+* Improved error messages
+* Keys of maps are strings when decoded, by default
 * encoder prototcol does not fallback to any to allow custom implementation
 * removed encoding / decoding of the triplet tuple representing a time stamp (need to implement locally if needed)
 * UTC is implemented using struct `Bson.UTC`
