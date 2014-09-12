@@ -165,53 +165,6 @@ defmodule Bson do
     iex> %{a: 1, b: 2} |> Bson.encode |> Bson.decode
     %{a: 1, b: 2}
 
-  ```
-  see protocol `BsonDecoder`
-  """
-  def decode(bson), do: tokenize(bson) |> Enum.map(&decode_kv(&1, bson)) |> :maps.from_list
-  @doc """
-  Same as `decode/1` but will start at a given postion in the binary
-  """
-  def decode(part, bson), do: tokenize(part, bson) |> Enum.map(&decode_kv(&1, bson)) |> :maps.from_list
-
-  @doc """
-  Returns tokens of the Bson document (no decoding)
-
-    iex> Bson.tokenize <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
-    [{{5, 1}, %BsonTk.Int32{part: {7, 4}}}]
-
-    iex> Bson.tokenize <<12, 0, 0>>
-    ** (BsonDecodeError) total length of bson document must be at least 5 at 0 of <<12, 0, 0>>
-
-    iex> Bson.tokenize <<12, 0, 0, 0, 0, 0>>
-    ** (BsonDecodeError) total length of bson document does not match document header at 0 of <<12, 0, 0, 0, 0, 0>>
-
-    iex> Bson.tokenize <<12, 0, 0, 0, 0, 97, 0, 1, 0, 0, 0, 0>>
-    ** (BsonDecodeError) Unknown element type 00 at 7 of <<12, 0, 0, 0, 0, 97, 0, 1, 0, 0, 0, 0>>
-
-  """
-  def tokenize(bson) do
-    sizebson = byte_size(bson)
-    cond do
-      sizebson < 5 ->
-        raise BsonDecodeError,
-          at: 0,
-          msg: "total length of bson document must be at least 5",
-          bson: bson
-      sizebson != int32(bson, 0) ->
-        raise BsonDecodeError,
-          at: 0,
-          msg: "total length of bson document does not match document header",
-          bson: bson
-      true ->
-        BsonTk.tokenize_e_list(bson, 4, sizebson-1)
-    end
-  end
-
-  @doc """
-  Same as `tokenize/1` but will start at a given postion in the binary
-  """
-  def tokenize({from, len}, bson), do: BsonTk.tokenize_e_list(bson, from+4, from+len-1)
 
   @doc """
   Formats a bson document using the document strings (add size and trailing null character)
