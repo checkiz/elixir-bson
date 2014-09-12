@@ -42,13 +42,17 @@
 <li><code class="inline">:oid</code> - contains a binary size 12
 </li>
 </ul>
+<p>iex&gt; inspect %Bson.ObjectId{}
+“ObjectId()”
+iex&gt; inspect %Bson.ObjectId{oid: “    ”}
+“ObjectId(0f1b01020304050607080910)”</p>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
-/lib/bson.ex#L65" class="view_source">Source</a>
+        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L67" class="view_source">Source</a>
       
 
       

@@ -29,8 +29,6 @@
           <li><a href="#modules_summary">Modules</a></li>
         
         
-          <li><a href="#exceptions_summary">Exceptions</a></li>
-        
         
           <li><a href="#protocols_summary">Protocols</a></li>
         
@@ -51,6 +49,31 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
   <td class="summary_signature"><a href="Bson.Bin.html">Bson.Bin</a></td>
   
     <td class="summary_synopsis"><p>Represents Binary data</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="Bson.Decoder.html">Bson.Decoder</a></td>
+  
+    <td class="summary_synopsis"><p>Decoder for Bson documents</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="Bson.Decoder.Error.html">Bson.Decoder.Error</a></td>
+  
+    <td class="summary_synopsis"><p>Container for error messages</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="Bson.Encoder.html">Bson.Encoder</a></td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="Bson.Encoder.Error.html">Bson.Encoder.Error</a></td>
+  
+    <td class="summary_synopsis"><p>Container for error messages</p>
 </td>
   
 </tr>
@@ -83,154 +106,32 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
   
 </tr>
 <tr>
+  <td class="summary_signature"><a href="Bson.UTC.html">Bson.UTC</a></td>
+  
+    <td class="summary_synopsis"><p>Represent UTC datetime</p>
+</td>
+  
+</tr>
+<tr>
   <td class="summary_signature"><a href="BsonJson.html">BsonJson</a></td>
   
     <td class="summary_synopsis"><p>Converts a Bson document into a JSON document</p>
 </td>
   
 </tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.html">BsonTk</a></td>
-  
-    <td class="summary_synopsis"><p><a href="BsonTk.html"><code class="inline">BsonTk</code></a> tokenize a bson document see tokenize/1 in module <a href="Bson.html"><code class="inline">Bson</code></a></p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Array.html">BsonTk.Array</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Array</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Atom.html">BsonTk.Atom</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Symbol</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Bin.html">BsonTk.Bin</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Binary data</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Bool.html">BsonTk.Bool</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Boolean</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Doc.html">BsonTk.Doc</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Embedded BSON Document</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Float.html">BsonTk.Float</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Floating point</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Int32.html">BsonTk.Int32</a></td>
-  
-    <td class="summary_synopsis"><p>Token for 32-bit Integer</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Int64.html">BsonTk.Int64</a></td>
-  
-    <td class="summary_synopsis"><p>Token for 64-bit integer</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.JS.html">BsonTk.JS</a></td>
-  
-    <td class="summary_synopsis"><p>Token for JavaScript code with or without scope</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Now.html">BsonTk.Now</a></td>
-  
-    <td class="summary_synopsis"><p>Token for UTC datetime</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.ObjectId.html">BsonTk.ObjectId</a></td>
-  
-    <td class="summary_synopsis"><p>Token for MongoDb ObjectId</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Regex.html">BsonTk.Regex</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Regular expression</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.String.html">BsonTk.String</a></td>
-  
-    <td class="summary_synopsis"><p>Token for UTF-8 string</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonTk.Timestamp.html">BsonTk.Timestamp</a></td>
-  
-    <td class="summary_synopsis"><p>Token for Timestamp</p>
-</td>
-  
-</tr>
 
         </table>
       
 
-      
-        <h2 id="exceptions_summary">Exceptions summary <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
-        <table class="summary">
-          <tr>
-  <td class="summary_signature"><a href="BsonDecodeError.html">BsonDecodeError</a></td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonEncoder.Tuple.Error.html">BsonEncoder.Tuple.Error</a></td>
-  
-    <td class="summary_synopsis"><p>Only 2 tuple formats can be encoded. An empty tuple and the one given by now/0</p>
-</td>
-  
-</tr>
-
-        </table>
       
 
       
         <h2 id="protocols_summary">Protocols summary <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></h2>
         <table class="summary">
           <tr>
-  <td class="summary_signature"><a href="BsonDecoder.html">BsonDecoder</a></td>
+  <td class="summary_signature"><a href="Bson.Encoder.Protocol.html">Bson.Encoder.Protocol</a></td>
   
-    <td class="summary_synopsis"><p>Similarly to <a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a>, this protocol defines decoding of chunks of Bson document.
-Chunks are identified by tokens and isolate an element of a Bson document</p>
-</td>
-  
-</tr>
-<tr>
-  <td class="summary_signature"><a href="BsonEncoder.html">BsonEncoder</a></td>
-  
-    <td class="summary_synopsis"><p><a href="BsonEncoder.html"><code class="inline">BsonEncoder</code></a> protocol defines Bson encoding according to Elixir types or Bson specific struct (see <a href="Bson.html"><code class="inline">Bson</code></a>)</p>
+    <td class="summary_synopsis"><p><a href="Bson.Encoder.Protocol.html"><code class="inline">Bson.Encoder.Protocol</code></a> protocol defines Bson encoding according to Elxir terms and some Bson predefined structs (see <a href="Bson.html"><code class="inline">Bson</code></a>)</p>
 </td>
   
 </tr>

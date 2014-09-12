@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bson.UTC</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.UTC.html">UTC</a></div>
+
+      <h1>
+        Bson.UTC
+        
+      </h1>
+
+      <ul class="summary_links">
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+      </ul>
+
+      
+        <div id="moduledoc" class="docstring">
+          <p>Represent UTC datetime</p>
+<ul>
+<li><code class="inline">:ms</code> - miliseconds
+</li>
+</ul>
+
+        </div>
+      
+
+      
+        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L114" class="view_source">Source</a>
+      
+
+      
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#from_now/1">from_now(arg1)</a></td>
+  
+    <td class="summary_synopsis"><p>Returns a struct <a href="Bson.UTC.html"><code class="inline">Bson.UTC</code></a> using a tuple given by <a href="http://www.erlang.org/doc/man/erlang.html#now-0"><code class="inline">:erlang.now/0</code></a></p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#to_now/1">to_now(utc)</a></td>
+  
+    <td class="summary_synopsis"><p>Returns a triplet tuple similar to the return value of <a href="http://www.erlang.org/doc/man/erlang.html#now-0"><code class="inline">:erlang.now/0</code></a> using a struct <a href="Bson.UTC.html"><code class="inline">Bson.UTC</code></a></p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
+
+      
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <div class="detail_header" id="from_now/1">
+    <span class="signature"><strong>from_now(arg1)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#from_now/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Returns a struct <a href="Bson.UTC.html"><code class="inline">Bson.UTC</code></a> using a tuple given by <a href="http://www.erlang.org/doc/man/erlang.html#now-0"><code class="inline">:erlang.now/0</code></a></p>
+<pre><code class="">iex&gt; Bson.UTC.from_now({1410, 473634, 449058})
+%Bson.UTC{ms: 1410473634449}</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L130" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="to_now/1">
+    <span class="signature"><strong>to_now(utc)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#to_now/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Returns a triplet tuple similar to the return value of <a href="http://www.erlang.org/doc/man/erlang.html#now-0"><code class="inline">:erlang.now/0</code></a> using a struct <a href="Bson.UTC.html"><code class="inline">Bson.UTC</code></a></p>
+<pre><code class="">iex&gt; Bson.UTC.to_now(%Bson.UTC{ms: 1410473634449})
+{1410, 473634, 449000}</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L140" class="view_source">Source</a>
+  
+</div>
+
+        </div>
+      
+
+      
+
+      
+    </div>
+  </body>
+</html>

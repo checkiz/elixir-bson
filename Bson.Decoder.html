@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bson.Decoder</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.Decoder.html">Decoder</a></div>
+
+      <h1>
+        Bson.Decoder
+        
+      </h1>
+
+      <ul class="summary_links">
+        
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
+        
+        
+        
+        
+      </ul>
+
+      
+        <div id="moduledoc" class="docstring">
+          <p>Decoder for Bson documents</p>
+
+        </div>
+      
+
+      
+        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L1" class="view_source">Source</a>
+      
+
+      
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#document/2">document(bsonbuffer, opts \\ %Bson.Decoder{})</a></td>
+  
+    <td class="summary_synopsis"><p>Decodes the first document of a Bson buffer</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#elist_to_atom_map/1">elist_to_atom_map(elist)</a></td>
+  
+    <td class="summary_synopsis"><p>Transform an elist to a map with atom keys</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#elist_to_hashdict/1">elist_to_hashdict(elist)</a></td>
+  
+    <td class="summary_synopsis"><p>Transform an elist to a hashdict</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#elist_to_keyword/1">elist_to_keyword(elist)</a></td>
+  
+    <td class="summary_synopsis"><p>Transform an elist to a Keyword</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#elist_to_map/1">elist_to_map(elist)</a></td>
+  
+    <td class="summary_synopsis"><p>Transform an elist to a map</p>
+</td>
+  
+</tr>
+<tr>
+  <td class="summary_signature"><a href="#identity/1">identity(elist)</a></td>
+  
+    <td class="summary_synopsis"><p>Identity function</p>
+</td>
+  
+</tr>
+
+        </table>
+      
+
+      
+
+      
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <div class="detail_header" id="document/2">
+    <span class="signature"><strong>document(bsonbuffer, opts \\ %Bson.Decoder{})</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#document/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Decodes the first document of a Bson buffer</p>
+<ul>
+<li><code class="inline">bsonbuffer</code> contains one or several bson documents
+</li>
+<li><code class="inline">opts</code> specify a function to encode document and an other to encode binaries
+</li>
+</ul>
+<pre><code class="">iex&gt; [%{},
+...&gt;  %{a: 3},
+...&gt;  %{a: &quot;r&quot;},
+...&gt;  %{a: 1, b: 5}
+...&gt; ] |&gt; Enum.all? fn(term) -&gt; assert term == term |&gt; Bson.encode |&gt; Bson.decode end
+true
+
+iex&gt; term = %{
+...&gt; a:  4.1,
+...&gt; b:  2}
+...&gt; assert term == term |&gt; Bson.encode |&gt; Bson.decode
+true
+
+# Document format error
+iex&gt; &lt;&lt;4, 0, 0, 0, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: :&quot;document size&quot;, rest: {4, &lt;&lt;4, 0, 0, 0, 0, 0&gt;&gt;}}
+iex&gt; &lt;&lt;5, 0, 0, 0, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: :buffer_not_empty, acc: %{}, rest: &lt;&lt;0&gt;&gt;}
+iex&gt; &lt;&lt;5, 0, 0, 0, 0, 0&gt;&gt; |&gt; Bson.Decoder.document
+{%{}, &lt;&lt;0&gt;&gt;}
+iex&gt; &lt;&lt;5, 0, 0, 0, 1&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: :&quot;document trail&quot;, acc: %{}, rest: {0, &lt;&lt;1&gt;&gt;}}
+iex&gt; &lt;&lt;5, 0, 0, 0, 0, 0&gt;&gt; |&gt; Bson.Decoder.document
+{%{}, &lt;&lt;0&gt;&gt;}
+
+# Unsupported element kind (here 203)
+iex&gt; &lt;&lt;27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 203, 98, 0, 12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, {:kind, 203}], acc: [[{&quot;a&quot;, 1}]], rest: {12, &lt;&lt;12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0&gt;&gt;}}
+
+# Float encoding
+# %{a: 1, b: ~~~} - wrong float in 'b'
+iex&gt; &lt;&lt;27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 1, 98, 0, 255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, :float], acc: [[{&quot;a&quot;, 1}]], rest: {12, &lt;&lt;255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0&gt;&gt;}}
+
+# %{a: 1, b: %{c: 1, d: ~~~}} - wrong float in 'd'
+iex&gt; &lt;&lt;38, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 3, 98, 0, 23, 0, 0, 0, 16, 99, 0, 1, 0, 0, 0, 1, 100, 0, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0&gt;&gt;  |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, &quot;d&quot;, :float], acc: [[{&quot;a&quot;, 1}], [{&quot;c&quot;, 1}]], rest: {8, &lt;&lt;255, 255, 255, 255, 255, 255, 255, 255, 0, 0&gt;&gt;}}
+
+# Cstring
+#                                                    | should be 3
+iex&gt; &lt;&lt;27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, :bytestring], acc: [[{&quot;a&quot;, 1}]], rest: {8, &lt;&lt;99, 98, 0, 0&gt;&gt;}}
+#                                                    | should be &gt; 1
+iex&gt; &lt;&lt;27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, :bytestring], acc: [[{&quot;a&quot;, 1}]], rest: {8, &lt;&lt;99, 98, 0, 0&gt;&gt;}}
+#                                                    | missing string length
+iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |&gt; Bson.decode
+%Bson.Decoder.Error{what: [&quot;b&quot;, :string], acc: [[{&quot;a&quot;, 1}]], rest: {6, &lt;&lt;99, 0, 0&gt;&gt;}}</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L128" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="elist_to_atom_map/1">
+    <span class="signature"><strong>elist_to_atom_map(elist)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#elist_to_atom_map/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Transform an elist to a map with atom keys</p>
+<pre><code class="">iex&gt; [{&quot;a&quot;, 1}, {&quot;b&quot;, 2}] |&gt; Bson.Decoder.elist_to_atom_map
+%{a: 1, b: 2}</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L40" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="elist_to_hashdict/1">
+    <span class="signature"><strong>elist_to_hashdict(elist)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#elist_to_hashdict/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Transform an elist to a hashdict</p>
+<pre><code class="">iex&gt; [{&quot;a&quot;, 1}, {&quot;b&quot;, 2}] |&gt; Bson.Decoder.elist_to_hashdict
+%HashDict{} |&gt; Dict.put(&quot;a&quot;, 1) |&gt; Dict.put(&quot;b&quot;, 2)</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L51" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="elist_to_keyword/1">
+    <span class="signature"><strong>elist_to_keyword(elist)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#elist_to_keyword/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Transform an elist to a Keyword</p>
+<pre><code class="">iex&gt; [{&quot;a&quot;, 1}, {&quot;b&quot;, 2}] |&gt; Bson.Decoder.elist_to_keyword
+[a: 1, b: 2]</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L62" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="elist_to_map/1">
+    <span class="signature"><strong>elist_to_map(elist)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#elist_to_map/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Transform an elist to a map</p>
+<pre><code class="">iex&gt; [{&quot;a&quot;, 1}, {&quot;b&quot;, 2}] |&gt; Bson.Decoder.elist_to_map
+%{&quot;a&quot; =&gt; 1, &quot;b&quot; =&gt; 2}</code></pre>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L29" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
+  <div class="detail_header" id="identity/1">
+    <span class="signature"><strong>identity(elist)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#identity/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Identity function</p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_decoder.ex#L67" class="view_source">Source</a>
+  
+</div>
+
+        </div>
+      
+
+      
+
+      
+    </div>
+  </body>
+</html>

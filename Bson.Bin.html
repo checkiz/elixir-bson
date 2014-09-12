@@ -47,14 +47,21 @@
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
-/lib/bson.ex#L106" class="view_source">Source</a>
+        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L142" class="view_source">Source</a>
       
 
       
         <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
         <table class="summary">
           <tr>
+  <td class="summary_signature"><a href="#new/2">new(bin, subtype)</a></td>
+  
+    <td class="summary_synopsis"><p>Retruns a struct <a href="Bson.Bin.html"><code class="inline">Bson.Bin</code></a></p>
+</td>
+  
+</tr>
+<tr>
   <td class="summary_signature"><a href="#subtyx/1">subtyx(atom1)</a></td>
   
     <td class="summary_synopsis"><p>Returns the subtype of the bynary data (<code class="inline">Binary</code> is the default). Other subtypes according to specs are:</p>
@@ -62,7 +69,7 @@
   
 </tr>
 <tr>
-  <td class="summary_signature"><a href="#xsubty/1">xsubty(arg1)</a></td>
+  <td class="summary_signature"><a href="#xsubty/1">xsubty(int1)</a></td>
   
     <td class="summary_synopsis"><p>Returns the atom coresponding to the subtype of the bynary data</p>
 </td>
@@ -78,6 +85,23 @@
         <div id="functions_details" class="details_list">
           <h2>Functions</h2>
           <div class="detail">
+  <div class="detail_header" id="new/2">
+    <span class="signature"><strong>new(bin, subtype)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#new/2" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Retruns a struct <a href="Bson.Bin.html"><code class="inline">Bson.Bin</code></a></p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L180" class="view_source">Source</a>
+  
+</div>
+<div class="detail">
   <div class="detail_header" id="subtyx/1">
     <span class="signature"><strong>subtyx(atom1)</strong></span>
     <div class="detail_header_links">
@@ -89,30 +113,30 @@
   
   <div class="docstring"><p>Returns the subtype of the bynary data (<code class="inline">Binary</code> is the default). Other subtypes according to specs are:</p>
 <ul>
-<li><code class="inline">Binary</code> - Binary / Generic
+<li><code class="inline">:binary</code> - Binary / Generic
 </li>
-<li><code class="inline">Function</code> - Function
+<li><code class="inline">:function</code> - Function
 </li>
-<li><code class="inline">Binary.Old</code> - Binary (Old)
+<li><code class="inline">:binary.Old</code> - Binary (Old)
 </li>
-<li><code class="inline">UUID.Old</code> - UUID (Old)
+<li><code class="inline">:uuid_old</code> - UUID (Old)
 </li>
-<li><code class="inline">UUID</code> - UUID
+<li><code class="inline">:uuid</code> - UUID
 </li>
-<li><code class="inline">MD5</code> - MD5
+<li><code class="inline">:md5</code> - MD5
 </li>
-<li><code class="inline">User</code> - User defined
+<li><code class="inline">:usrer</code> - User defined
 </li>
 </ul>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
-/lib/bson.ex#L122" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L158" class="view_source">Source</a>
   
 </div>
 <div class="detail">
   <div class="detail_header" id="xsubty/1">
-    <span class="signature"><strong>xsubty(arg1)</strong></span>
+    <span class="signature"><strong>xsubty(int1)</strong></span>
     <div class="detail_header_links">
       <span class="detail_type">(function)</span>
       <a href="#xsubty/1" class="detail_link" title="Link to this function">#</a>
@@ -123,8 +147,8 @@
   <div class="docstring"><p>Returns the atom coresponding to the subtype of the bynary data</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/43d31f99adcde8f8c23a0c513c722d0111fc03c5
-/lib/bson.ex#L133" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson.ex#L169" class="view_source">Source</a>
   
 </div>
 

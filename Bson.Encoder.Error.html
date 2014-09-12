@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BsonTk.Doc</title>
+    <title>Bson.Encoder.Error</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
 
@@ -20,10 +20,10 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="BsonTk.html">BsonTk</a> &rarr; <a href="BsonTk.Doc.html">Doc</a></div>
+      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.Encoder.html">Encoder</a> &rarr; <a href="Bson.Encoder.Error.html">Error</a></div>
 
       <h1>
-        BsonTk.Doc
+        Bson.Encoder.Error
         
       </h1>
 
@@ -37,14 +37,22 @@
 
       
         <div id="moduledoc" class="docstring">
-          <p>Token for Embedded BSON Document</p>
+          <p>Container for error messages</p>
+<ul>
+<li><code class="inline">what</code> has triggerred the error
+</li>
+<li><code class="inline">acc</code> contains what was already decoded for this term (ie the size of a string when the string itself could not be decoded)
+</li>
+<li><code class="inline">term</code> that failed to be encoded
+</li>
+</ul>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/d849919e50e605deac639ec0a63095dbee029f80
-/lib/bson_tokenizer.ex#L27" class="view_source">Source</a>
+        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+/lib/bson_encoder.ex#L30" class="view_source">Source</a>
       
 
       
