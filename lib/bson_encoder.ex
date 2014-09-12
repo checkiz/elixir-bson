@@ -20,14 +20,25 @@ defmodule Bson.Encoder do
     * `Bson.JS' - see specs
     * `Bson.Bin' - see specs
     * `Bson.Timestamp  ' - see specs
-
     """
 
     @doc """
     Returns a binary representing a term in Bson format
-
     """
     def encode(term)
+  end
+  defmodule Error do
+    @moduledoc """
+    Container for error messages
+
+    * `what` has triggerred the error
+    * `acc` contains what was already decoded for this term (ie the size of a string when the string itself could not be decoded)
+    * `term` that failed to be encoded
+    """
+    defstruct [what: nil, acc: [], term: nil]
+    defimpl Inspect, for: Error do
+      def inspect(e,_), do: inspect([what: e.what, term: e.term, acc: e.acc])
+    end
   end
 
   @doc """
@@ -37,10 +48,9 @@ defmodule Bson.Encoder do
     case Enumerable.reduce(element_list, {:cont, []},
       fn({key, value}, acc) when is_binary(key) -> accumulate_elist(key, value, acc)
         ({key, value}, acc) when is_atom(key) -> accumulate_elist(Atom.to_string(key), value, acc)
-        (element, acc) -> {:halt, {"cannot encode as element", element, acc |> Enum.reverse}}
+        (element, acc) -> {:halt, %Error{what: [:element], term: element, acc: acc |> Enum.reverse}}
       end) do
-      {:halted, reason} ->
-        {:error, reason}
+      {:halted, error} -> error
       {:done, acc} ->
         acc |> Enum.reverse |> IO.iodata_to_binary |> wrap_document
     end
@@ -56,11 +66,11 @@ defmodule Bson.Encoder do
     {<<18>>, <<255, 255, 255, 127, 255, 255, 255, 255>>}
 
     iex> Bson.Encoder.Protocol.encode 0x8000000000000001
-    {:error, {"cannot encode as integer", 9223372036854775809}}
+    %Bson.Encoder.Error{what: [Integer], term: 0x8000000000000001}
     """
     def encode(i) when -0x80000000 <= i and i <= 0x80000000, do: {<<0x10>>, <<i::32-signed-little>>}
     def encode(i) when -0x8000000000000000 <= i and i <= 0x8000000000000000, do: {<<0x12>>, <<i::64-signed-little>>}
-    def encode(i), do: {:error, {"cannot encode as integer", i}}
+    def encode(i), do: %Error{what: [Integer], term: i}
   end
 
   defimpl Protocol, for: Float do
@@ -110,26 +120,28 @@ defmodule Bson.Encoder do
     {<<9>>, <<30, 97, 207, 181, 67, 1, 0, 0>>}
     """
     def encode(%Bson.UTC{ms: ms}) when is_integer(ms), do: {<<0x09>>, <<ms::64-little-signed>>}
-    def encode(utc), do: {:error, {"cannot encode as UTC", utc}}
+    def encode(utc), do: %Error{what: [Bson.UTC], term: utc}
   end
 
   defimpl Protocol, for: Bson.Regex do
     @doc """
     iex> Bson.Encoder.Protocol.encode(%Bson.Regex{pattern: "p", opts: "i"})
-    {<<11>>, <<112, 0, 105, 0>>}
+    {<<11>>, ["p", <<0>>, "i", <<0>>]}
     """
-    def encode(regex), do: {<<0x0b>>, regex.pattern <> <<0x00>> <> regex.opts <> <<0x00>>}
+    def encode(%Bson.Regex{pattern: p, opts: o}) when is_binary(p) and is_binary(o), do: {<<0x0b>>, [p, <<0x00>>, o, <<0x00>>]}
+    def encode(regex), do: %Error{what: [Bson.Regex], term: regex}
   end
 
   defimpl Protocol, for: Bson.ObjectId do
     @doc """
     iex> Bson.Encoder.Protocol.encode(%Bson.ObjectId{oid: <<0xFF>>})
     {<<0x07>>, <<255>>}
+
     iex> Bson.Encoder.Protocol.encode(%Bson.ObjectId{oid: 123})
-    {:error, {"cannot encode as object id", %Bson.ObjectId{oid: 123}}}
+    %Bson.Encoder.Error{what: [Bson.ObjectId], term: %Bson.ObjectId{oid: 123}}
     """
     def encode(%Bson.ObjectId{oid: oid}) when is_binary(oid), do: {<<0x07>>, oid}
-    def encode(obj), do: {:error, {"cannot encode as object id", obj}}
+    def encode(oid), do: %Error{what: [Bson.ObjectId], term: oid}
   end
 
   defimpl Protocol, for: Bson.JS do
@@ -144,13 +156,12 @@ defmodule Bson.Encoder do
     end
     def encode(%Bson.JS{code: js, scope: ctx}) when is_binary(js) and is_map(ctx) do
       case Bson.Encoder.document(ctx) do
-        {:error, reason} ->
-          {:error, {"cannot encode context of js", reason}}
+        %Error{}=error -> %Error{error|what: {:js_context, error.what}}
         ctxBin ->
           {<<0x0f>>, [Bson.Encoder.wrap_string(js), ctxBin] |> IO.iodata_to_binary |> js_ctx}
       end
     end
-    def encode(js), do: {:error, {"cannot encode as js", js}}
+    def encode(js), do: %Error{what: [Bson.JS], term: js}
 
     defp js_ctx(jsctx), do: <<(byte_size(jsctx)+4)::32-little-signed, jsctx::binary>>
   end
@@ -158,13 +169,13 @@ defmodule Bson.Encoder do
   defimpl Protocol, for: Bson.Bin do
     @doc """
     iex> Bson.Encoder.Protocol.encode(%Bson.Bin{bin: "e", subtype: Bson.Bin.subtyx(:user)})
-    {<<5>>,<<1, 0, 0, 0, 128, 101>>}
+    {<<5>>,[<<1, 0, 0, 0>>, 128, "e"]}
     """
     def encode(%Bson.Bin{bin: bin, subtype: subtype}), do: encode(bin, subtype)
     def encode(bin, subtype)
       when is_binary(bin) and is_integer(subtype),
-      do:  {<<0x05>>, <<byte_size(bin)::32-little-signed, subtype, bin::binary>>}
-    def encode(bin, subtype), do: {:error, {"cannot encode as binary", {bin, subtype}}}
+      do:  {<<0x05>>, [<<byte_size(bin)::32-little-signed>>, subtype, bin]}
+    def encode(bin, subtype), do: %Error{what: [Bson.Bin], term: {bin, subtype}}
   end
 
   defimpl Protocol, for: Bson.Timestamp do
@@ -176,7 +187,7 @@ defmodule Bson.Encoder do
       when is_integer(i) and -0x80000000 <= i and i <= 0x80000000
        and is_integer(t) and -0x80000000 <= t and t <= 0x80000000,
       do: {<<0x11>>, <<i::32-signed-little, t::32-signed-little>>}
-      def encode(ts), do: {:error, {"cannot encode as timestamp", ts}}
+      def encode(ts), do: %Error{what: [Bson.Timestamp], term: ts}
   end
 
   defimpl Protocol, for: BitString do
@@ -185,7 +196,7 @@ defmodule Bson.Encoder do
     {<<2>>, [<<2, 0, 0, 0>>, "a", <<0>>]}
     """
     def encode(s) when is_binary(s),  do: {<<0x02>>, Bson.Encoder.wrap_string(s)}
-    def encode(bits), do: {:error, {"cannot encode as string", bits}}
+    def encode(bits), do: %Error{what: [BitString], term: bits}
   end
 
   defimpl Protocol, for: List do
@@ -206,11 +217,11 @@ defmodule Bson.Encoder do
     {<<3>>,<<14, 0, 0, 0, 2, 97, 0, 2, 0, 0, 0, 115, 0, 0>>}
 
     iex> Bson.Encoder.Protocol.encode([{"a", "s"}, {:b, "r"}, 1, 2])
-    {:error,
-            {"fail encoding key-value pairs",
-             {"cannot encode as element", 1,
-              [[<<2>>, "a", <<0>>, [<<2, 0, 0, 0>>, "s", <<0>>]],
-               [<<2>>, "b", <<0>>, [<<2, 0, 0, 0>>, "r", <<0>>]]]}}}
+    %Bson.Encoder.Error{
+      term: 1,
+      what: [:element],
+      acc: [[<<2>>, "a", <<0>>, [<<2, 0, 0, 0>>, "s", <<0>>]],
+            [<<2>>, "b", <<0>>, [<<2, 0, 0, 0>>, "r", <<0>>]]]}
 
     iex> Bson.Encoder.Protocol.encode([2, 3, ])
     {<<4>>,<<19, 0, 0, 0, 16, 48, 0, 2, 0, 0, 0, 16, 49, 0, 3, 0, 0, 0, 0>>}
@@ -218,11 +229,16 @@ defmodule Bson.Encoder do
     """
     def encode([{k, _}|_]=elist) when is_atom(k) or is_binary(k) do
       case Bson.Encoder.document(elist) do
-        {:error, reason} -> {:error, {"fail encoding key-value pairs", reason}}
+        %Error{}=error -> error
         encoded_elist -> {<<0x03>>, encoded_elist}
       end
     end
-    def encode(list), do: {<<0x04>>, Bson.Encoder.array(list)}
+    def encode(list) do
+      case Bson.Encoder.array(list) do
+        %Error{}=error -> error
+        encoded_list -> {<<0x04>>, encoded_list}
+      end
+    end
   end
 
   defimpl Protocol, for: [Map, HashDict, Keyword] do
@@ -243,20 +259,37 @@ defmodule Bson.Encoder do
     iex> Bson.Encoder.Protocol.encode(HashDict.put(%HashDict{}, :a, "r"))
     {<<3>>,<<14, 0, 0, 0, 2, 97, 0, 2, 0, 0, 0, 114, 0, 0>>}
 
-    iex> Bson.Encoder.Protocol.encode(%{a: "r", b: "s", u: %Bson.UTC{ms: "e"}})
-    {:error,
-            {"fail encoding dict",
-             {{"fail encoding u", {"cannot encode as UTC", %Bson.UTC{ms: "e"}}},
-              [[<<2>>, "a", <<0>>, [<<2, 0, 0, 0>>, "r", <<0>>]],
-               [<<2>>, "b", <<0>>, [<<2, 0, 0, 0>>, "s", <<0>>]]]}}}
-
-    iex> Bson.Encoder.Protocol.encode(%{a: "r", b: "s", c: %{u: %Bson.UTC{ms: "e"}}}) |> elem(0)
-    :error
+    iex> Bson.Encoder.Protocol.encode(%{a: "va", b: "vb", u: %Bson.UTC{ms: "e"}})
+    %Bson.Encoder.Error{
+      what: ["u", Bson.UTC],
+      term: %Bson.UTC{ms: "e"},
+      acc: [[[<<2>>, "a", <<0>>, [<<3, 0, 0, 0>>, "va", <<0>>]],
+             [<<2>>, "b", <<0>>, [<<3, 0, 0, 0>>, "vb", <<0>>]]]]}
+    iex> Bson.Encoder.Protocol.encode([1, 2, %Bson.UTC{ms: "e"}])
+    %Bson.Encoder.Error{
+      what: ["2", Bson.UTC],
+      term: %Bson.UTC{ms: "e"},
+      acc: [[[<<16>>, "0", <<0>>, <<1, 0, 0, 0>>],
+             [<<16>>, "1", <<0>>, <<2, 0, 0, 0>>]]]}
+    iex> Bson.Encoder.Protocol.encode(%{a: "va", b: "vb", c: %{c1: "vc1", cu: %Bson.UTC{ms: "e"}}})
+    %Bson.Encoder.Error{
+      what: ["c", "cu", Bson.UTC],
+      term: %Bson.UTC{ms: "e"},
+      acc: [[[<<2>>, "a", <<0>>, [<<3, 0, 0, 0>>, "va", <<0>>]],
+            [<<2>>, "b", <<0>>,  [<<3, 0, 0, 0>>, "vb", <<0>>]]],
+           [[<<2>>, "c1", <<0>>, [<<4, 0, 0, 0>>, "vc1", <<0>>]]]]}
+    iex> Bson.Encoder.Protocol.encode(%{a: "va", b: "vb", c: ["c0", %Bson.UTC{ms: "e"}]})
+    %Bson.Encoder.Error{
+      what: ["c", "1", Bson.UTC],
+      term: %Bson.UTC{ms: "e"},
+      acc: [[[<<2>>, "a", <<0>>, [<<3, 0, 0, 0>>, "va", <<0>>]],
+            [<<2>>, "b", <<0>>, [<<3, 0, 0, 0>>, "vb", <<0>>]]],
+           [[<<2>>, "0", <<0>>, [<<3, 0, 0, 0>>, "c0", <<0>>]]]]}
 
     """
     def encode(dict) do
       case Bson.Encoder.document(dict) do
-        {:error, reason} -> {:error, {"fail encoding dict", reason}}
+        %Error{}=error -> error
         encoded_dict -> {<<0x03>>, encoded_dict}
       end
     end
@@ -270,11 +303,10 @@ defmodule Bson.Encoder do
       fn(item, {acc, i}) ->
         case accumulate_elist(Integer.to_string(i), item, acc) do
           {:cont, acc} -> {:cont, {acc, i+1}}
-          halt -> halt
+          {:halt, error} -> {:halt, error}
         end
       end) do
-      {:halted, reason} ->
-        {:error, reason}
+      {:halted, error} -> error
       {:done, {bufferAcc, _}} ->
         bufferAcc |> Enum.reverse |> IO.iodata_to_binary |> wrap_document
     end
@@ -295,7 +327,7 @@ defmodule Bson.Encoder do
   """
   def accumulate_elist(name, value, elist) do
     case element(name, value) do
-      {:error, reason} -> {:halt, {reason, elist |> Enum.reverse}}
+      %Error{}=error -> {:halt, %Error{error|acc: [Enum.reverse(elist)|error.acc]}}
       encoded_element -> {:cont, [encoded_element | elist]}
     end
   end
@@ -305,7 +337,7 @@ defmodule Bson.Encoder do
   """
   def element(name, value) do
     case Bson.Encoder.Protocol.encode(value) do
-      {:error, reason} -> {:error, {"fail encoding #{name}", reason}}
+      %Error{}=error -> %Error{error|what: [name|error.what]}
       {kind, encoded_value} -> [kind, name, <<0x00>>, encoded_value]
     end
   end
