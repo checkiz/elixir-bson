@@ -1,5 +1,5 @@
 defmodule Bson.Decoder do
-  defstruct [elist_to_doc: &Bson.Decoder.elist_to_atom_map/1]
+  defstruct [new_doc: &Bson.Decoder.elist_to_atom_map/1]
 
   defmodule Error do
     defstruct [what: nil, reason: nil, acc: nil, rest: nil]
@@ -212,7 +212,7 @@ defmodule Bson.Decoder do
       {restsize, rest, name} ->
         case value(kind, rest, restsize, opts) do
           %Error{}=error -> %Error{what: :elist_value, reason: {name, error.what, error.reason}, acc: {error.acc, Enum.reverse(elist)}, rest: {restsize, rest}}
-          {0, rest, value} -> {rest, Bson.Decoder.elist_to_atom_map([{name, value}|elist])}
+          {0, rest, value} -> {rest, opts.new_doc.([{name, value}|elist])}
           {restsize, buffer, value} ->
             {name, restsize, buffer |> byte_size}
             elist(buffer, restsize, opts, [{name, value}|elist])

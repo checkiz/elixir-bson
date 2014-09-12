@@ -205,7 +205,7 @@ defmodule Bson do
   see protocol `BsonDecoder`
   """
   def decode(bson) do
-    case Bson.Decoder.document(bson, %Bson.Decoder{elist_to_doc: &Bson.Decoder.elist_to_atom_map/1}) do
+    case Bson.Decoder.document(bson, %Bson.Decoder{new_doc: &Bson.Decoder.elist_to_atom_map/1}) do
       {:error, reason} -> {:error, reason}
       {doc, <<>>} -> doc
       {doc, rest} -> {:error, {"buffer not empty after reading document", doc}, rest}
