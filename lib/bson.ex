@@ -69,17 +69,21 @@ defmodule Bson do
     Represents the [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/)
 
     * `:oid` - contains a binary size 12
+
+    iex> inspect %Bson.ObjectId{}
+    "ObjectId()"
+    iex> inspect %Bson.ObjectId{oid: "\x0F\x1B\x01\x02\x03\x04\x05\x06\x07\x08\x09\x10"}
+    "ObjectId(0f1b01020304050607080910)"
+
     """
-  end
     defimpl Inspect, for: Bson.ObjectId do
       def inspect(%Bson.ObjectId{oid: nil},_), do: "ObjectId()"
-      def inspect(%Bson.ObjectId{oid: oid},_) do
-        "ObjectId(" <>
-        (for <<b::4<-oid>>, into: <<>> do
-          <<Integer.to_string(b,16)::binary>>
-        end |> String.downcase) <> ")"
-      end
+      def inspect(%Bson.ObjectId{oid: oid},_) when is_binary(oid), do: "ObjectId(#{Bson.hex(oid)|>String.downcase})"
+      def inspect(%Bson.ObjectId{oid: oid},_), do: "InvalidObjectId(#{inspect(oid)})"
     end
+  end
+
+  def hex(bin), do: (for <<h::4 <- bin>>, into: <<>>, do: <<Integer.to_string(h,16)::binary>>)
   defmodule JS do
     defstruct code: "", scope: nil
     @moduledoc """
