@@ -185,105 +185,31 @@ defmodule Bson do
   It delegates this job to protocol `BsonEncoder`
 
   """
-  def encode(term) do
-    <<_::16, doc::binary>> = BsonEncoder.encode(term, "")
-    doc
-  end
+  defdelegate encode(term), to: Bson.Encoder, as: :document
 
   @doc """
-  Returns a decoded term from a Bson binary
+  Returns decoded terms from a Bson binary document into a map with keys in the form of atoms (for other options use `Bson.Decoder.document/2`)
 
 
   ```elixir
     iex> %{} |> Bson.encode |> Bson.decode
     %{}
-    iex> %{a: 1} |> Bson.encode |> Bson.decode
-    %{a: 1}
-    iex> %{a: 1, b: 2} |> Bson.encode |> Bson.decode
-    %{a: 1, b: 2}
 
+    iex> %{a: "a"} |> Bson.encode |> Bson.decode
+    %{a: "a"}
 
-  @doc """
-  Formats a bson document using the document strings (add size and trailing null character)
+    iex> %{a: 1, b: [2, "c"]} |> Bson.encode |> Bson.decode
+    %{a: 1, b: [2, "c"]}
+
+  ```
+  see protocol `BsonDecoder`
   """
-  def doc(s),     do: <<(byte_size(s)+5)::32-signed-little, s::binary>> <> <<0x00>>
-
-  @doc """
-  Formats a bson string using the document strings (add size and trailing null character)
-  """
-  def string(s),  do: int32(byte_size(s)+1) <> s <> <<0x00>>
-
-  @doc """
-  Formats a integer in a int32 binary
-  """
-  def int32(i),   do: <<(i)::size(32)-signed-little>>
-
-  @doc """
-  Formats a integer in a int64 binary
-  """
-  def int64(i),   do: <<(i)::size(64)-signed-little>>
-
-  @doc """
-  Formats true or false
-  """
-  def bool(bson, from) do
-    case binary_part(bson, from, 1) do
-      <<0x00>> -> false
-      <<0x01>> -> true
+  def decode(bson) do
+    case Bson.Decoder.document(bson, %Bson.Decoder{elist_to_doc: &Bson.Decoder.elist_to_atom_map/1}) do
+      {:error, reason} -> {:error, reason}
+      {doc, <<>>} -> doc
+      {doc, rest} -> {:error, {"buffer not empty after reading document", doc}, rest}
     end
   end
 
-  @doc """
-  Decodes an integer (int32) from a binary at a given position
-  """
-  def int32(bson, from) do
-    at  = from*8
-    <<_::size(at), i::size(32)-signed-little, _::binary>> = bson
-    i
-  end
-
-  @doc """
-  Decodes an integer (int64) from a binary at a given position
-  """
-  def int64(bson, from) do
-    at  = from*8
-    <<_::size(at), i::size(64)-signed-little, _::binary>> = bson
-    i
-  end
-
-  @doc """
-  Decodes a float from a binary at a given position. It will decode atoms nan, +inf and -inf as floats
-  """
-  def float(bson, off) do
-    case binary_part(bson, off, 8) do
-      <<0, 0, 0, 0, 0, 0, 248, 127>> -> :nan
-      <<0, 0, 0, 0, 0, 0, 248, 255>> -> :nan
-      <<0, 0, 0, 0, 0, 0, 240, 127>> -> :'+inf'
-      <<0, 0, 0, 0, 0, 0, 240, 255>> -> :'-inf'
-      <<f::size(64)-float-little>> -> f
-    end
-  end
-
-  @doc """
-  Peeks for the end of a cstring
-  """
-  def peek_cstring_end(bson, from, to) do
-    {cstring_end, _} = :binary.match(bson, <<0x00>>, [{:scope, {from, to-from+1}}])
-    cstring_end
-  end
-
-  @doc """
-  Decodes a key-value pair (one element of a document)
-  """
-  def decode_kv({tk_name, tk_element}, bson) do
-    { :erlang.binary_part(bson, tk_name) |> String.to_atom,
-      BsonDecoder.decode(tk_element, bson)}
-  end
-
-  @doc """
-  Decodes one array item. Here the name token is not decoded, it contains the position of the item in the list.
-  """
-  def decode_v({_, tk_element}, bson) do
-    BsonDecoder.decode(tk_element, bson)
-  end
 end
