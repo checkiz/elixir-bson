@@ -110,24 +110,24 @@ defmodule Bson do
     * `MD5` - MD5
     * `User` - User defined
     """
-    def subtyx(Binary),     do: <<0x00>>
-    def subtyx(Function),   do: <<0x01>>
-    def subtyx(Binary.Old), do: <<0x02>>
-    def subtyx(UUID.Old),   do: <<0x03>>
-    def subtyx(UUID),       do: <<0x04>>
-    def subtyx(MD5),        do: <<0x05>>
-    def subtyx(User),       do: <<0x80>>
+    def subtyx(:binary),     do: 0x00
+    def subtyx(:function),   do: 0x01
+    def subtyx(:binary_old), do: 0x02
+    def subtyx(:uuid_old),   do: 0x03
+    def subtyx(:uuid),       do: 0x04
+    def subtyx(:md5),        do: 0x05
+    def subtyx(:user),       do: 0x80
 
     @doc """
     Returns the atom coresponding to the subtype of the bynary data
     """
-    def xsubty(<<0x00>>),     do: Binary
-    def xsubty(<<0x01>>),     do: Function
-    def xsubty(<<0x02>>),     do: Binary
-    def xsubty(<<0x03>>),     do: UUID
-    def xsubty(<<0x04>>),     do: UUID
-    def xsubty(<<0x05>>),     do: MD5
-    def xsubty(<<0x80>>),     do: User
+    def xsubty(0x00),     do: :binary
+    def xsubty(0x01),     do: :function
+    def xsubty(0x02),     do: :binary
+    def xsubty(0x03),     do: :uuid
+    def xsubty(0x04),     do: :uuid
+    def xsubty(0x05),     do: :md5
+    def xsubty(0x80),     do: :user
   end
 
   @doc """
