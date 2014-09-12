@@ -1,76 +1,128 @@
 defmodule Bson.Decoder do
   defstruct [new_doc: &Bson.Decoder.elist_to_atom_map/1, new_bin: &Bson.Bin.new/2]
-
+  @moduledoc """
+  Decoder for Bson documents
+  """
   defmodule Error do
     defstruct [what: nil, acc: [], rest: nil]
     @moduledoc """
     Container for error messages
 
     * `what` has triggerred the error
-    * `reason`an error was triggerred
-    * `acc` contains what was already decoded for this term (ie the size of a string when the string itself could not be decoded)
-    * `rest` what's left to be decoded (and possibly a size)
+    * `acc` contains what was already decoded
+    * `rest` what's left to be decoded (prefixed with the size of what's left to be decoded)
     """
     defimpl Inspect, for: Error do
       def inspect(e,_), do: inspect([what: e.what, acc: e.acc, rest: e.rest])
     end
   end
 
+  @doc """
+  Transform an elist to a map
+
+  ```
+  iex> [{"a", 1}, {"b", 2}] |> Bson.Decoder.elist_to_map
+  %{"a" => 1, "b" => 2}
+
+  ```
+  """
   defdelegate elist_to_map(elist), to: :maps, as: :from_list
+
+  @doc """
+  Transform an elist to a map with atom keys
+
+  ```
+  iex> [{"a", 1}, {"b", 2}] |> Bson.Decoder.elist_to_atom_map
+  %{a: 1, b: 2}
+
+  ```
+  """
   def elist_to_atom_map(elist), do: elist |> Enum.map(fn{k, v} -> {String.to_atom(k), v} end) |> elist_to_map
+
+  @doc """
+  Transform an elist to a hashdict
+
+  ```
+  iex> [{"a", 1}, {"b", 2}] |> Bson.Decoder.elist_to_hashdict
+  %HashDict{} |> Dict.put("a", 1) |> Dict.put("b", 2)
+
+  ```
+  """
   def elist_to_hashdict(elist), do: elist |> Enum.reduce %HashDict{}, fn({k, v}, h) -> HashDict.put(h, k, v) end
 
   @doc """
+  Transform an elist to a Keyword
+
+  ```
+  iex> [{"a", 1}, {"b", 2}] |> Bson.Decoder.elist_to_keyword
+  [a: 1, b: 2]
+
+  ```
+  """
+  def elist_to_keyword(elist), do: elist |> Enum.map fn({k, v}) -> {String.to_atom(k), v} end
+
+  @doc """
+  Identity function
+  """
+  def identity(elist), do: elist
+
+  @doc """
   Decodes the first document of a Bson buffer
-    iex> [%{},
-    ...>  %{a: 3},
-    ...>  %{a: "r"},
-    ...>  %{a: 1, b: 5}
-    ...> ] |> Enum.all? fn(term) -> assert term == term |> Bson.encode |> Bson.decode end
-    true
 
-    iex> term = %{
-    ...> a:  4.1,
-    ...> b:  2}
-    ...> assert term == term |> Bson.encode |> Bson.decode
-    true
+  * `bsonbuffer` contains one or several bson documents
+  * `opts` specify a function to encode document and an other to encode binaries
 
-    # Document format error
-    iex> <<4, 0, 0, 0, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: :"document size", rest: {4, <<4, 0, 0, 0, 0, 0>>}}
-    iex> <<5, 0, 0, 0, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: :buffer_not_empty, acc: %{}, rest: <<0>>}
-    iex> <<5, 0, 0, 0, 0, 0>> |> Bson.Decoder.document
-    {%{}, <<0>>}
-    iex> <<5, 0, 0, 0, 1>> |> Bson.decode
-    %Bson.Decoder.Error{what: :"document trail", acc: %{}, rest: {0, <<1>>}}
-    iex> <<5, 0, 0, 0, 0, 0>> |> Bson.Decoder.document
-    {%{}, <<0>>}
+  ```
+  iex> [%{},
+  ...>  %{a: 3},
+  ...>  %{a: "r"},
+  ...>  %{a: 1, b: 5}
+  ...> ] |> Enum.all? fn(term) -> assert term == term |> Bson.encode |> Bson.decode end
+  true
 
-    # Unsupported element kind (here 203)
-    iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 203, 98, 0, 12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", {:kind, 203}], acc: [[{"a", 1}]], rest: {12, <<12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0>>}}
+  iex> term = %{
+  ...> a:  4.1,
+  ...> b:  2}
+  ...> assert term == term |> Bson.encode |> Bson.decode
+  true
 
-    # Float encoding
-    # %{a: 1, b: ~~~} - wrong float in 'b'
-    iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 1, 98, 0, 255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", :float], acc: [[{"a", 1}]], rest: {12, <<255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0>>}}
+  # Document format error
+  iex> <<4, 0, 0, 0, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: :"document size", rest: {4, <<4, 0, 0, 0, 0, 0>>}}
+  iex> <<5, 0, 0, 0, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: :buffer_not_empty, acc: %{}, rest: <<0>>}
+  iex> <<5, 0, 0, 0, 0, 0>> |> Bson.Decoder.document
+  {%{}, <<0>>}
+  iex> <<5, 0, 0, 0, 1>> |> Bson.decode
+  %Bson.Decoder.Error{what: :"document trail", acc: %{}, rest: {0, <<1>>}}
+  iex> <<5, 0, 0, 0, 0, 0>> |> Bson.Decoder.document
+  {%{}, <<0>>}
 
-    # %{a: 1, b: %{c: 1, d: ~~~}} - wrong float in 'd'
-    iex> <<38, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 3, 98, 0, 23, 0, 0, 0, 16, 99, 0, 1, 0, 0, 0, 1, 100, 0, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0>>  |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", "d", :float], acc: [[{"a", 1}], [{"c", 1}]], rest: {8, <<255, 255, 255, 255, 255, 255, 255, 255, 0, 0>>}}
+  # Unsupported element kind (here 203)
+  iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 203, 98, 0, 12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", {:kind, 203}], acc: [[{"a", 1}]], rest: {12, <<12, 0, 0, 0, 16, 99, 0, 3, 0, 0, 0, 0, 0>>}}
 
-    # Cstring
-    #                                                    | should be 3
-    iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", :bytestring], acc: [[{"a", 1}]], rest: {8, <<99, 98, 0, 0>>}}
-    #                                                    | should be > 1
-    iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", :bytestring], acc: [[{"a", 1}]], rest: {8, <<99, 98, 0, 0>>}}
-    #                                                    | missing string length
-    iex> <<21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0>> |> Bson.decode
-    %Bson.Decoder.Error{what: ["b", :string], acc: [[{"a", 1}]], rest: {6, <<99, 0, 0>>}}
+  # Float encoding
+  # %{a: 1, b: ~~~} - wrong float in 'b'
+  iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 1, 98, 0, 255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", :float], acc: [[{"a", 1}]], rest: {12, <<255, 255, 255, 255, 255, 255, 255, 255, 16, 0, 0>>}}
 
+  # %{a: 1, b: %{c: 1, d: ~~~}} - wrong float in 'd'
+  iex> <<38, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 3, 98, 0, 23, 0, 0, 0, 16, 99, 0, 1, 0, 0, 0, 1, 100, 0, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0>>  |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", "d", :float], acc: [[{"a", 1}], [{"c", 1}]], rest: {8, <<255, 255, 255, 255, 255, 255, 255, 255, 0, 0>>}}
+
+  # Cstring
+  #                                                    | should be 3
+  iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", :bytestring], acc: [[{"a", 1}]], rest: {8, <<99, 98, 0, 0>>}}
+  #                                                    | should be > 1
+  iex> <<27, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 1, 0, 0, 0, 99, 98, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", :bytestring], acc: [[{"a", 1}]], rest: {8, <<99, 98, 0, 0>>}}
+  #                                                    | missing string length
+  iex> <<21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: ["b", :string], acc: [[{"a", 1}]], rest: {6, <<99, 0, 0>>}}
+
+  ```
 
   """
   def document(bsonbuffer, opts \\ %Bson.Decoder{})

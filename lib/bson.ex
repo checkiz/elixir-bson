@@ -4,6 +4,7 @@ defmodule Bson do
   see http://bsonspec.org/
 
   Usage:
+  ```
 
     iex> term = %{
     ...> a:  -4.230845,
@@ -83,6 +84,7 @@ defmodule Bson do
     end
   end
 
+  @doc false
   def hex(bin), do: (for <<h::4 <- bin>>, into: <<>>, do: <<Integer.to_string(h,16)::binary>>)
 
   defmodule Regex do
@@ -119,15 +121,21 @@ defmodule Bson do
     @doc """
     Returns a struct `Bson.UTC` using a tuple given by `:erlang.now/0`
 
+    ```
     iex> Bson.UTC.from_now({1410, 473634, 449058})
     %Bson.UTC{ms: 1410473634449}
+
+    ```
     """
     def from_now({a, s, o}), do: %UTC{ms: a * 1000000000 + s * 1000 + div(o, 1000)}
     @doc """
     Returns a triplet tuple similar to the return value of `:erlang.now/0` using a struct `Bson.UTC`
 
+    ```
     iex> Bson.UTC.to_now(%Bson.UTC{ms: 1410473634449})
     {1410, 473634, 449000}
+    
+    ```
     """
     def to_now(%UTC{ms: ms}), do: {div(ms, 1000000000), rem(div(ms, 1000), 1000000), rem(ms * 1000, 1000000)}
   end
@@ -139,13 +147,13 @@ defmodule Bson do
     @doc """
     Returns the subtype of the bynary data (`Binary` is the default). Other subtypes according to specs are:
 
-    * `Binary` - Binary / Generic
-    * `Function` - Function
-    * `Binary.Old` - Binary (Old)
-    * `UUID.Old` - UUID (Old)
-    * `UUID` - UUID
-    * `MD5` - MD5
-    * `User` - User defined
+    * `:binary` - Binary / Generic
+    * `:function` - Function
+    * `:binary.Old` - Binary (Old)
+    * `:uuid_old` - UUID (Old)
+    * `:uuid` - UUID
+    * `:md5` - MD5
+    * `:usrer` - User defined
     """
     def subtyx(:binary),     do: 0x00
     def subtyx(:function),   do: 0x01
@@ -166,6 +174,9 @@ defmodule Bson do
     def xsubty(0x05),     do: :md5
     def xsubty(0x80),     do: :user
 
+    @doc """
+    Retruns a struct `Bson.Bin`
+    """
     def new(bin, subtype), do: %Bin{bin: bin, subtype: subtype}
   end
 
@@ -174,13 +185,13 @@ defmodule Bson do
 
   It accepts a Map and returns a binary
 
-  ```elixir
-    iex> Bson.encode(%{})
-    <<5, 0, 0, 0, 0>>
-    iex> Bson.encode(%{a: 1})
-    <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
-    iex> Bson.encode(%{a: 1, b: 2})
-    <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
+  ```
+  iex> Bson.encode(%{})
+  <<5, 0, 0, 0, 0>>
+  iex> Bson.encode(%{a: 1})
+  <<12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0>>
+  iex> Bson.encode(%{a: 1, b: 2})
+  <<19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0>>
 
   ```
 
@@ -193,15 +204,15 @@ defmodule Bson do
   Returns decoded terms from a Bson binary document into a map with keys in the form of atoms (for other options use `Bson.Decoder.document/2`)
 
 
-  ```elixir
-    iex> %{} |> Bson.encode |> Bson.decode
-    %{}
+  ```
+  iex> %{} |> Bson.encode |> Bson.decode
+  %{}
 
-    iex> %{a: "a"} |> Bson.encode |> Bson.decode
-    %{a: "a"}
+  iex> %{a: "a"} |> Bson.encode |> Bson.decode
+  %{a: "a"}
 
-    iex> %{a: 1, b: [2, "c"]} |> Bson.encode |> Bson.decode
-    %{a: 1, b: [2, "c"]}
+  iex> %{a: 1, b: [2, "c"]} |> Bson.encode |> Bson.decode
+  %{a: 1, b: [2, "c"]}
 
   ```
   see protocol `BsonDecoder`
