@@ -165,6 +165,8 @@ defmodule Bson do
     def xsubty(0x04),     do: :uuid
     def xsubty(0x05),     do: :md5
     def xsubty(0x80),     do: :user
+
+    def new(bin, subtype), do: %Bin{bin: bin, subtype: subtype}
   end
 
   @doc """

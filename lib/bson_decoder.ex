@@ -1,5 +1,5 @@
 defmodule Bson.Decoder do
-  defstruct [new_doc: &Bson.Decoder.elist_to_atom_map/1]
+  defstruct [new_doc: &Bson.Decoder.elist_to_atom_map/1, new_bin: &Bson.Bin.new/2]
 
   defmodule Error do
     defstruct [what: nil, reason: nil, acc: nil, rest: nil]
@@ -167,12 +167,12 @@ defmodule Bson.Decoder do
     end
   end
   # binary
-  defp value(0x05, buffer, restsize, _opts) do
+  defp value(0x05, buffer, restsize, opts) do
     case buffer do
       <<size::32-little-signed, subtype, rest::binary>> when restsize>size+4 ->
         bitsize = size * 8
         case rest do
-          <<bin::size(bitsize), rest::binary>> when restsize>size+3 -> {restsize-size-5, rest, %Bson.Bin{bin: <<bin::size(bitsize)>>, subtype: subtype}}
+          <<bin::size(bitsize), rest::binary>> when restsize>size+3 -> {restsize-size-5, rest, opts.new_bin.(<<bin::size(bitsize)>>, subtype)}
           _ -> %Error{what: :binary, reason: :"fail decoding", acc: {size, subtype}, rest: {restsize, rest}}
         end
       _ -> %Error{what: :binary_size, reason: :"fail decoding", rest: {restsize, buffer}}

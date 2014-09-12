@@ -160,10 +160,11 @@ defmodule Bson.Encoder do
     iex> Bson.Encoder.Protocol.encode(%Bson.Bin{bin: "e", subtype: Bson.Bin.subtyx(:user)})
     {<<5>>,<<1, 0, 0, 0, 128, 101>>}
     """
-    def encode(%Bson.Bin{bin: bin, subtype: subtype})
+    def encode(%Bson.Bin{bin: bin, subtype: subtype}), do: encode(bin, subtype)
+    def encode(bin, subtype)
       when is_binary(bin) and is_integer(subtype),
       do:  {<<0x05>>, <<byte_size(bin)::32-little-signed, subtype, bin::binary>>}
-    def encode(bin), do: {:error, {"cannot encode as binary", bin}}
+    def encode(bin, subtype), do: {:error, {"cannot encode as binary", {bin, subtype}}}
   end
 
   defimpl Protocol, for: Bson.Timestamp do
