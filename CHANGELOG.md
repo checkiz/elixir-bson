@@ -1,4 +1,4 @@
-# dev
+# v0.4
 * prépartion pour elixir v1
 * Bson.Regex is obsolete and replaced with Regex
 * Improved error messages
