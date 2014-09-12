@@ -5,7 +5,10 @@ notifications:
 otp_release:
   - 17.1
 before_install:
-  - git clone https://github.com/elixir-lang/elixir
-  - cd elixir && make && cd ..
-before_script: "export PATH=`pwd`/elixir/bin:$PATH"
+  - wget http://s3.hex.pm/builds/elixir/1.0.0.zip
+  - unzip -d elixir 1.0.0.zip
+before_script:
+  - export PATH=`pwd`/elixir/bin:$PATH
+  - mix local.hex --force
+  - mix deps.get
 script: "MIX_ENV=test mix do deps.get, test"
