@@ -260,7 +260,7 @@ defmodule Bson.Decoder do
   defp value(kind, buffer, restsize, _), do: %Error{what: [kind: kind], rest: {restsize, buffer}}
 
   #decodes a string
-  defp string(buffer, size, restsize) when size > 0 do
+  defp string(buffer, size, restsize) when size >= 0 do
     bitsize = size * 8
     case buffer do
       <<s::size(bitsize), 0, rest::binary>> -> {restsize-(size+1), rest, <<s::size(bitsize)>>}
