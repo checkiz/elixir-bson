@@ -76,6 +76,7 @@ defmodule Bson.Decoder do
   iex> [%{},
   ...>  %{a: 3},
   ...>  %{a: "r"},
+  ...>  %{a: ""},
   ...>  %{a: 1, b: 5}
   ...> ] |> Enum.all? fn(term) -> assert term == term |> Bson.encode |> Bson.decode end
   true
