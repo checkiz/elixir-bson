@@ -299,6 +299,7 @@ defmodule Bson.Decoder do
     end
   end
 
+  defp ilist(buffer, 0, _), do: {buffer, []}
   defp ilist(buffer, size, opts, ilist \\ [])
   defp ilist(<<kind, rest::binary>>, restsize, opts, ilist) do
     case skip_cstring(rest, restsize-1) do
