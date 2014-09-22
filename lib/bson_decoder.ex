@@ -76,6 +76,7 @@ defmodule Bson.Decoder do
   iex> [%{},
   ...>  %{a: 3},
   ...>  %{a: "r"},
+  ...>  %{a: ""},
   ...>  %{a: 1, b: 5}
   ...> ] |> Enum.all? fn(term) -> assert term == term |> Bson.encode |> Bson.decode end
   true
@@ -259,7 +260,7 @@ defmodule Bson.Decoder do
   defp value(kind, buffer, restsize, _), do: %Error{what: [kind: kind], rest: {restsize, buffer}}
 
   #decodes a string
-  defp string(buffer, size, restsize) when size > 0 do
+  defp string(buffer, size, restsize) when size >= 0 do
     bitsize = size * 8
     case buffer do
       <<s::size(bitsize), 0, rest::binary>> -> {restsize-(size+1), rest, <<s::size(bitsize)>>}
