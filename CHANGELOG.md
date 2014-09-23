@@ -1,4 +1,7 @@
-# v0.4
+# v0.4.1
+* allow setting options to Bson.decode
+* improve documentation
+# v0.4.0
 * prépartion pour elixir v1
 * Bson.Regex is obsolete and replaced with Regex
 * Improved error messages
