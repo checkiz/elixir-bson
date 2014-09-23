@@ -70,8 +70,18 @@ defmodule Bson.Decoder do
   Decodes the first document of a Bson buffer
 
   * `bsonbuffer` contains one or several bson documents
-  * `opts` specify a function to encode document and an other to encode binaries
+  * `opts` must be a struct ```%Bson.Decoder{}``` that can be used to configure how the decoder handels document and binary elements.
+    By default the root document and any embeded documents are processed
+    using `Bson.Decoder.elist_to_atom_map/1` that receives an element list and returns and Elixir term.
+    Binary element are processed by `Bson.Bin.new/2`.
 
+  Others alternatives for processing parsed documents are available:
+
+  * `Bson.Decoder.elist_to_map`
+  * `Bson.Decoder.elist_to_hashdict`
+  * `Bson.Decoder.elist_to_keyword`
+
+  usage:
   ```
   iex> [%{},
   ...>  %{a: 3},

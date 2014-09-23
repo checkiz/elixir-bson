@@ -134,7 +134,7 @@ defmodule Bson do
     ```
     iex> Bson.UTC.to_now(%Bson.UTC{ms: 1410473634449})
     {1410, 473634, 449000}
-    
+
     ```
     """
     def to_now(%UTC{ms: ms}), do: {div(ms, 1000000000), rem(div(ms, 1000), 1000000), rem(ms * 1000, 1000000)}
@@ -195,7 +195,7 @@ defmodule Bson do
 
   ```
 
-  It delegates this job to protocol `BsonEncoder`
+  It delegates this job to protocol `Bson.Encoder.Protocol`
 
   """
   defdelegate encode(term), to: Bson.Encoder, as: :document
@@ -215,10 +215,10 @@ defmodule Bson do
   %{a: 1, b: [2, "c"]}
 
   ```
-  see protocol `BsonDecoder`
+  see protocol `Bson.Decoder.document` and 
   """
-  def decode(bson) do
-    case Bson.Decoder.document(bson, %Bson.Decoder{new_doc: &Bson.Decoder.elist_to_atom_map/1}) do
+  def decode(bson, opts \\ %Bson.Decoder{}) do
+    case Bson.Decoder.document(bson, opts) do
       %Bson.Decoder.Error{}=error -> error
       {doc, <<>>} -> doc
       {doc, rest} -> %Bson.Decoder.Error{what: :buffer_not_empty, acc: doc, rest: rest}
