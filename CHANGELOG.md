@@ -1,3 +1,5 @@
+# v0.4.2
+* new helper function `Bson.ObjectId.from_string/1`
 # v0.4.1
 * allow setting options to Bson.decode
 * improve documentation
