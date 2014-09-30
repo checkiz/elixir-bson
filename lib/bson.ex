@@ -40,7 +40,8 @@ defmodule Bson do
     ...> q2: -8000111000222001,
     ...> r:  %Bson.Timestamp{inc: 1, ts: 2},
     ...> s1: :min_key,
-    ...> s2: :max_key
+    ...> s2: :max_key,
+    ...> t: Bson.ObjectId.from_string("52e0e5a10000020003000004")
     ...> }
     ...> bson = Bson.encode(term)
     <<188,1,0,0,1,97,0,206,199,181,161,98,236,16,192,2,98,0,6,0,0,0,104,101,108,108,111,0,3,99,0,23,0,0,0,16,120,0,255,
@@ -82,6 +83,18 @@ defmodule Bson do
       def inspect(%Bson.ObjectId{oid: oid},_) when is_binary(oid), do: "ObjectId(#{Bson.hex(oid)|>String.downcase})"
       def inspect(%Bson.ObjectId{oid: oid},_), do: "InvalidObjectId(#{inspect(oid)})"
     end
+
+    @doc  """
+    Converts a string into a %Bson.ObjectId
+
+    * `:object_id` - A string representing the BSON Object Id
+
+    Usage:
+
+    iex> inspect Bson.ObjectId.from_string("52e0e5a10000020003000004")
+    "ObjectId(52e0e5a10000020003000004)"
+    """
+    def from_string(object_id) when is_bitstring(object_id) and byte_size(object_id) == 24 , do: %Bson.ObjectId{oid: (for <<hex::16 <- object_id>>, into: <<>>, do: <<String.to_integer(<<hex::16>>, 16)::8>>)}
   end
 
   @doc false
