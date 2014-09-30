@@ -20,7 +20,7 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.ObjectId.html">ObjectId</a></div>
+      <div class="breadcrumbs">bson v0.4.2 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.ObjectId.html">ObjectId</a></div>
 
       <h1>
         Bson.ObjectId
@@ -29,6 +29,10 @@
 
       <ul class="summary_links">
         
+          <li><a href="#summary">Summary</a></li>
+        
+        
+          <li><a href="#functions_details">Functions</a></li>
         
         
         
@@ -51,14 +55,55 @@ iex&gt; inspect %Bson.ObjectId{oid: “    ”}
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
-/lib/bson.ex#L67" class="view_source">Source</a>
+        <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
+/lib/bson.ex#L68" class="view_source">Source</a>
+      
+
+      
+        <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
+        <table class="summary">
+          <tr>
+  <td class="summary_signature"><a href="#from_string/1">from_string(object_id)</a></td>
+  
+    <td class="summary_synopsis"><p>Converts a string into a %Bson.ObjectId</p>
+</td>
+  
+</tr>
+
+        </table>
       
 
       
 
       
+        <div id="functions_details" class="details_list">
+          <h2>Functions</h2>
+          <div class="detail">
+  <div class="detail_header" id="from_string/1">
+    <span class="signature"><strong>from_string(object_id)</strong></span>
+    <div class="detail_header_links">
+      <span class="detail_type">(function)</span>
+      <a href="#from_string/1" class="detail_link" title="Link to this function">#</a>
+      <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
+    </div>
+  </div>
+  
+  <div class="docstring"><p>Converts a string into a %Bson.ObjectId</p>
+<ul>
+<li><code class="inline">:object_id</code> - A string representing the BSON Object Id
+</li>
+</ul>
+<p>Usage:</p>
+<p>iex&gt; inspect Bson.ObjectId.from_string(“52e0e5a10000020003000004”)
+“ObjectId(52e0e5a10000020003000004)”</p>
+</div>
+  
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
+/lib/bson.ex#L97" class="view_source">Source</a>
+  
+</div>
 
+        </div>
       
 
       

@@ -20,7 +20,7 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.Decoder.html">Decoder</a></div>
+      <div class="breadcrumbs">bson v0.4.2 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a> &rarr; <a href="Bson.Decoder.html">Decoder</a></div>
 
       <h1>
         Bson.Decoder
@@ -47,7 +47,7 @@
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+        <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L1" class="view_source">Source</a>
       
 
@@ -119,12 +119,26 @@
 <ul>
 <li><code class="inline">bsonbuffer</code> contains one or several bson documents
 </li>
-<li><code class="inline">opts</code> specify a function to encode document and an other to encode binaries
+<li><code class="inline">opts</code> must be a struct <code class="inline">%Bson.Decoder{}</code> that can be used to configure how the decoder handels document and binary elements.
+  By default the root document and any embeded documents are processed
+  using <a href="Bson.Decoder.html#elist_to_atom_map/1"><code class="inline">Bson.Decoder.elist_to_atom_map/1</code></a> that receives an element list and returns and Elixir term.
+  Binary element are processed by <a href="Bson.Bin.html#new/2"><code class="inline">Bson.Bin.new/2</code></a>.
 </li>
 </ul>
+<p>Others alternatives for processing parsed documents are available:</p>
+<ul>
+<li><code class="inline">Bson.Decoder.elist_to_map</code>
+</li>
+<li><code class="inline">Bson.Decoder.elist_to_hashdict</code>
+</li>
+<li><code class="inline">Bson.Decoder.elist_to_keyword</code>
+</li>
+</ul>
+<p>usage:</p>
 <pre><code class="">iex&gt; [%{},
 ...&gt;  %{a: 3},
 ...&gt;  %{a: &quot;r&quot;},
+...&gt;  %{a: &quot;&quot;},
 ...&gt;  %{a: 1, b: 5}
 ...&gt; ] |&gt; Enum.all? fn(term) -&gt; assert term == term |&gt; Bson.encode |&gt; Bson.decode end
 true
@@ -172,8 +186,8 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
 %Bson.Decoder.Error{what: [&quot;b&quot;, :string], acc: [[{&quot;a&quot;, 1}]], rest: {6, &lt;&lt;99, 0, 0&gt;&gt;}}</code></pre>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
-/lib/bson_decoder.ex#L128" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
+/lib/bson_decoder.ex#L139" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -191,7 +205,7 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
 %{a: 1, b: 2}</code></pre>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L40" class="view_source">Source</a>
   
 </div>
@@ -210,7 +224,7 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
 %HashDict{} |&gt; Dict.put(&quot;a&quot;, 1) |&gt; Dict.put(&quot;b&quot;, 2)</code></pre>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L51" class="view_source">Source</a>
   
 </div>
@@ -229,7 +243,7 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
 [a: 1, b: 2]</code></pre>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L62" class="view_source">Source</a>
   
 </div>
@@ -248,7 +262,7 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
 %{&quot;a&quot; =&gt; 1, &quot;b&quot; =&gt; 2}</code></pre>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L29" class="view_source">Source</a>
   
 </div>
@@ -265,7 +279,7 @@ iex&gt; &lt;&lt;21, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 2, 98, 0, 99, 0, 0&gt;&gt; |
   <div class="docstring"><p>Identity function</p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson_decoder.ex#L67" class="view_source">Source</a>
   
 </div>

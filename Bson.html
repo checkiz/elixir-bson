@@ -20,7 +20,7 @@
     </script>
 
     <div id="content">
-      <div class="breadcrumbs">bson v0.3.1 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a></div>
+      <div class="breadcrumbs">bson v0.4.2 &rarr; <a href="overview.html">Overview</a> &rarr; <a href="Bson.html">Bson</a></div>
 
       <h1>
         Bson
@@ -78,7 +78,8 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
   ...&gt; q2: -8000111000222001,
   ...&gt; r:  %Bson.Timestamp{inc: 1, ts: 2},
   ...&gt; s1: :min_key,
-  ...&gt; s2: :max_key
+  ...&gt; s2: :max_key,
+  ...&gt; t: Bson.ObjectId.from_string(&quot;52e0e5a10000020003000004&quot;)
   ...&gt; }
   ...&gt; bson = Bson.encode(term)
   &lt;&lt;188,1,0,0,1,97,0,206,199,181,161,98,236,16,192,2,98,0,6,0,0,0,104,101,108,108,111,0,3,99,0,23,0,0,0,16,120,0,255,
@@ -96,13 +97,13 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
   ...&gt; # assert that one by one all decoded element are identical to the original
   ...&gt; Enum.all? term, fn({k, v}) -&gt; assert Map.get(decodedTerm, k) == v end
   true</code></pre>
-<p>see <a href="#encode/1"><code class="inline">encode/1</code></a> and <a href="#decode/1"><code class="inline">decode/1</code></a></p>
+<p>see <a href="#encode/1"><code class="inline">encode/1</code></a> and <code class="inline">decode/1</code></p>
 
         </div>
       
 
       
-        <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
+        <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
 /lib/bson.ex#L1" class="view_source">Source</a>
       
 
@@ -110,7 +111,7 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
         <h2 id="summary">Summary<div class="detail_header_links"><a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a></div></h2>
         <table class="summary">
           <tr>
-  <td class="summary_signature"><a href="#decode/1">decode(bson)</a></td>
+  <td class="summary_signature"><a href="#decode/2">decode(bson, opts \\ %Bson.Decoder{})</a></td>
   
     <td class="summary_synopsis"><p>Returns decoded terms from a Bson binary document into a map with keys in the form of atoms (for other options use <a href="Bson.Decoder.html#document/2"><code class="inline">Bson.Decoder.document/2</code></a>)</p>
 </td>
@@ -133,11 +134,11 @@ see <a href="http://bsonspec.org/">http://bsonspec.org/</a></p>
         <div id="functions_details" class="details_list">
           <h2>Functions</h2>
           <div class="detail">
-  <div class="detail_header" id="decode/1">
-    <span class="signature"><strong>decode(bson)</strong></span>
+  <div class="detail_header" id="decode/2">
+    <span class="signature"><strong>decode(bson, opts \\ %Bson.Decoder{})</strong></span>
     <div class="detail_header_links">
       <span class="detail_type">(function)</span>
-      <a href="#decode/1" class="detail_link" title="Link to this function">#</a>
+      <a href="#decode/2" class="detail_link" title="Link to this function">#</a>
       <a class="to_top_link" href="#content" title="To the top of the page">&uarr;</a>
     </div>
   </div>
@@ -151,11 +152,11 @@ iex&gt; %{a: &quot;a&quot;} |&gt; Bson.encode |&gt; Bson.decode
 
 iex&gt; %{a: 1, b: [2, &quot;c&quot;]} |&gt; Bson.encode |&gt; Bson.decode
 %{a: 1, b: [2, &quot;c&quot;]}</code></pre>
-<p>see protocol <code class="inline">BsonDecoder</code></p>
+<p>see protocol <code class="inline">Bson.Decoder.document</code> and </p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
-/lib/bson.ex#L220" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
+/lib/bson.ex#L233" class="view_source">Source</a>
   
 </div>
 <div class="detail">
@@ -176,11 +177,11 @@ iex&gt; Bson.encode(%{a: 1})
 &lt;&lt;12, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 0&gt;&gt;
 iex&gt; Bson.encode(%{a: 1, b: 2})
 &lt;&lt;19, 0, 0, 0, 16, 97, 0, 1, 0, 0, 0, 16, 98, 0, 2, 0, 0, 0, 0&gt;&gt;</code></pre>
-<p>It delegates this job to protocol <code class="inline">BsonEncoder</code></p>
+<p>It delegates this job to protocol <a href="Bson.Encoder.Protocol.html"><code class="inline">Bson.Encoder.Protocol</code></a></p>
 </div>
   
-    <a href="https://github.com/checkiz/elixir-bson/blob/c74d034aaf8d8b2e0ebd425ceff100cdeadfab42
-/lib/bson.ex#L201" class="view_source">Source</a>
+    <a href="https://github.com/checkiz/elixir-bson/blob/c874f1fdd09fd5666bc6d5a368b3afde19212379
+/lib/bson.ex#L214" class="view_source">Source</a>
   
 </div>
 
