@@ -98,6 +98,10 @@ defmodule Bson.Decoder do
   true
 
   # Document format error
+  iex> "" |> Bson.decode
+  %Bson.Decoder.Error{what: :"document size is 0, must be > 4", acc: [], rest: {0, ""}}
+  iex> <<4, 0, 0, 0>> |> Bson.decode
+  %Bson.Decoder.Error{what: :"document size is 4, must be > 4", acc: [], rest: {4, <<4, 0, 0, 0>>}}
   iex> <<4, 0, 0, 0, 0, 0>> |> Bson.decode
   %Bson.Decoder.Error{what: :"document size", rest: {4, <<4, 0, 0, 0, 0, 0>>}}
   iex> <<5, 0, 0, 0, 0, 0>> |> Bson.decode
@@ -137,12 +141,16 @@ defmodule Bson.Decoder do
 
   """
   def document(bsonbuffer, opts \\ %Bson.Decoder{})
+  def document(bsonbuffer, _opts) when byte_size(bsonbuffer) < 5 do
+    %Error{what: :"document size is #{byte_size(bsonbuffer)}, must be > 4", rest: {byte_size(bsonbuffer), bsonbuffer}}
+  end
   def document(<<size::32-signed-little, _::binary>>=bson, opts) do
     case value(0x03, bson, size, opts) do
       %Error{}=error -> error
       {0, rest, doc} -> {doc, rest}
     end
   end
+
 
   # Embeded document
   defp value(0x03, buffer, restsize, opts) do

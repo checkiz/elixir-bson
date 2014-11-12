@@ -1,3 +1,5 @@
+# v0.4.3-dev
+* Decode crash if the buffer size is < 5, now it generates a %Bson.Decoder.Error{} return message
 # v0.4.2
 * new helper function `Bson.ObjectId.from_string/1`
 # v0.4.1
