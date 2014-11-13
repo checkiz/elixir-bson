@@ -1,4 +1,5 @@
 # v0.4.3-dev
+* Add %Bson.UTC inspect : when inspecting %Bson.UTC, convert it to ISO8601 format, e.g. 2014-9-11T22:13:54
 * Decode crash if the buffer size is < 5, now it generates a %Bson.Decoder.Error{} return message
 # v0.4.2
 * new helper function `Bson.ObjectId.from_string/1`

@@ -130,7 +130,17 @@ defmodule Bson do
     Represent UTC datetime
 
     * `:ms` - miliseconds
+
+    iex> inspect %Bson.UTC{ms: 1410473634449}
+    "2014-9-11T22:13:54"
+
     """
+    defimpl Inspect, for: Bson.UTC do
+      def inspect(bson_utc,_) do
+        {{y, mo, d}, {h, mi, s}} = :calendar.now_to_universal_time(Bson.UTC.to_now(bson_utc))
+        "#{y}-#{mo}-#{d}T#{h}:#{mi}:#{s}"
+      end
+    end
     @doc """
     Returns a struct `Bson.UTC` using a tuple given by `:erlang.now/0`
 
@@ -228,7 +238,7 @@ defmodule Bson do
   %{a: 1, b: [2, "c"]}
 
   ```
-  see protocol `Bson.Decoder.document` and 
+  see protocol `Bson.Decoder.document` and
   """
   def decode(bson, opts \\ %Bson.Decoder{}) do
     case Bson.Decoder.document(bson, opts) do
