@@ -1,4 +1,5 @@
-# v0.4.3-dev
+# v0.4.3
+* Add config for decoder: decoder_new_doc and decoder_new_bin 
 * Add %Bson.UTC inspect : when inspecting %Bson.UTC, convert it to ISO8601 format, e.g. 2014-9-11T22:13:54
 * Decode crash if the buffer size is < 5, now it generates a %Bson.Decoder.Error{} return message
 # v0.4.2

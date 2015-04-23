@@ -56,4 +56,4 @@ jsbson = Bson.encode js: %Bson.JS{code:"function(a) return a+b;", scope: [b: 2]}
 rebson = Bson.encode re: %Bson.Regex{pattern: "\d*", opts: "g"}
 ```
 
-Some configuration can be done using fun or protocol implementation, ie, it is possible to redefine encoder end decoder of Bson.Bin to implement specific encoding
+Some configuration can be done using fun or protocol implementation, ie, it is possible to redefine encoder end decoder of Bson.Bin to implement specific encoding. For that you can set Application envir for application `:bson`. Two options are available: `:decoder_new_doc` defaulted to `Bson.Decoder.elist_to_atom_map/1` and `:decoder_new_bin` defaulted to `&Bson.Bin.new/2`.
