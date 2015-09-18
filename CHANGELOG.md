@@ -1,3 +1,6 @@
+# v0.4.4
+* fix compilation warning
+* fix documentation url
 # v0.4.3
 * Add config for decoder: decoder_new_doc and decoder_new_bin 
 * Add %Bson.UTC inspect : when inspecting %Bson.UTC, convert it to ISO8601 format, e.g. 2014-9-11T22:13:54
