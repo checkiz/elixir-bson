@@ -76,12 +76,20 @@ defmodule Bson do
     "ObjectId()"
     iex> inspect %Bson.ObjectId{oid: "\x0F\x1B\x01\x02\x03\x04\x05\x06\x07\x08\x09\x10"}
     "ObjectId(0f1b01020304050607080910)"
+    iex> to_string %Bson.ObjectId{oid: "\x0F\x1B\x01\x02\x03\x04\x05\x06\x07\x08\x09\x10"}
+    "0f1b01020304050607080910"
 
     """
     defimpl Inspect, for: Bson.ObjectId do
       def inspect(%Bson.ObjectId{oid: nil},_), do: "ObjectId()"
       def inspect(%Bson.ObjectId{oid: oid},_) when is_binary(oid), do: "ObjectId(#{Bson.hex(oid)|>String.downcase})"
       def inspect(%Bson.ObjectId{oid: oid},_), do: "InvalidObjectId(#{inspect(oid)})"
+    end
+    
+    defimpl String.Chars, for: Bson.ObjectId do
+      def to_string(%Bson.ObjectId{oid: oid}) do
+        Bson.hex(oid)|>String.downcase
+      end
     end
 
     @doc  """
