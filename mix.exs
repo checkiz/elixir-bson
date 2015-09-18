@@ -38,7 +38,7 @@ defmodule Bson.Mixfile do
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/checkiz/elixir-bson",
-        "Documentation" => "https://checkiz.github.io/elixir-bson"
+        "Documentation" => "http://hexdocs.pm/bson/"
       } ]
   end
 end
