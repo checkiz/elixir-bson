@@ -314,7 +314,6 @@ defmodule Bson.Decoder do
           %Error{}=error -> %Error{error|what: [name|error.what], acc: [Enum.reverse(elist)|error.acc]}
           {0, rest, value} -> {rest, opts.new_doc.([{name, value}|elist])}
           {restsize, buffer, value} ->
-            {name, restsize, buffer |> byte_size}
             elist(buffer, restsize, opts, [{name, value}|elist])
         end
     end
